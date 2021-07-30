@@ -19,7 +19,7 @@
 
     .main {
         position: absolute;
-        height: calc(100% - 34px);
+        height: calc(100% - 44px);
         width: 100%;
         top: 0;
         left: 0;
@@ -29,12 +29,12 @@
 
     .bottom {
         position: absolute;
-        height: 34px;
+        height: 44px;
         width: 100%;
         bottom: 0;
         left: 0;
         z-index: 2;
-
+       
         &::before {
             content: '';
             height: 1px;
@@ -45,6 +45,21 @@
             top: 0;
             left: 0;
 
+        }
+
+        >div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+            height: 100%;
+            color: white;
+        }
+        .support {
+            img {
+                opacity: 0.2;
+                width: 24px;
+            }
         }
     }
 }

@@ -89,6 +89,7 @@ const Index = () => {
 
             const temperature = getDomWithClassName('head-temperature');
             const detailTody = getDomWithClassName('detail-tody');
+            const floatDetail = getDomWithClassName('float-detail');
             const detailScrollWrapped = getDomWithClassName('detail-scroll-wrapped');
 
             const containerHeadH = getDomHeight("container-head");
@@ -97,8 +98,17 @@ const Index = () => {
             const detailTodyH = getDomHeight('detail-tody');
             const detailContainerH = getDomHeight('detail-container');
 
-            const h = temperatureH + 30;
+            const isScrollUp = lastContainerScrollTop.current - target.scrollTop < 0;
+            lastContainerScrollTop.current = target.scrollTop;
+            const marginTop = 30;
+            // const h = (temperatureH + marginTop)/2;
+            const h = temperatureH;
             const p = 1 - target.scrollTop / h;
+            // console.log(target.scrollTop)
+            // if (isFloat.current && isScrollUp) {
+               
+            // }
+
             if (p < 0) {
                 temperature.style.opacity = "0";
                 detailTody.style.opacity = "0";
@@ -106,17 +116,23 @@ const Index = () => {
                 temperature.style.opacity = `${p}`;
                 detailTody.style.opacity = `${p}`;
             }
-            const isScrollUp = lastContainerScrollTop.current - target.scrollTop < 0;
-            lastContainerScrollTop.current = target.scrollTop;
-            if (target.scrollTop < h) {
+            
+            
+            
+            if (target.scrollTop < h && isFloat.current) {
                 isFloat.current = false;
+                // floatDetail.style.marginTop = `${containerHeadH}px`;
                 detailScrollWrapped.style.overflow = 'hidden';
             }
-            if (isScrollUp && target.scrollTop >= h) {
+            
+            if (isScrollUp && target.scrollTop >= h && !isFloat.current) {
                 isFloat.current = true;
                 target.scrollTo(0, h);
-                detailScrollWrapped.style.height = `${detailContainerH - (containerHeadH - h) - detailHeadH - detailTodyH}px`;
+                // floatDetail.style.marginTop = `${marginTop}px`;
+                detailScrollWrapped.style.height = `${detailContainerH - detailHeadH - detailTodyH - marginTop}px`;
                 detailScrollWrapped.style.overflow = 'auto';
+                // temperature.style.opacity = "0";
+                // detailTody.style.opacity = "0";
             }
         }
     }
@@ -125,11 +141,15 @@ const Index = () => {
         if (ev.target) {
             const target = ev.target as HTMLElement;
             const containerScroll = getDomWithClassName('container-scroll');
+            // const floatDetail = getDomWithClassName('float-detail');
+            // const containerHeadH = getDomHeight("container-head");
             const isScrollUp = lastScrollTop.current - target.scrollTop < 0;
             lastScrollTop.current = target.scrollTop;
 
             if (target.scrollTop <= 0) {
+                // floatDetail.style.marginTop = `${containerHeadH/2}px`;
                 containerScroll.style.overflow = 'auto';
+                // target.style.overflow = 'hidden';
             }
             if (isScrollUp) {
                 containerScroll.style.overflow = 'hidden';

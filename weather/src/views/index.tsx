@@ -11,7 +11,17 @@ const Index = () => {
             <Detail />
         </div>
         <div className="bottom">
-            bar
+            <div>
+                <div className="support">
+                    <img alt="hefeng" src="https://www.qweather.com/favicon-32x32.png?v=2021010553" />
+                </div>
+                <div className="page">
+                    bar
+                </div>
+                <div className="menu">
+                    bar
+                </div>
+            </div>
         </div>
     </div>
 }
