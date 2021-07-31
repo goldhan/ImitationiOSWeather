@@ -1,5 +1,7 @@
 import React from "react";
 import Detail from './detail';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper.scss';
 import './index.scss';
 
 const Index = () => {
@@ -8,7 +10,15 @@ const Index = () => {
             <img src="https://images.unsplash.com/photo-1534088568595-a066f410bcda?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=989&q=80" alt="" />
         </div>
         <div className="main">
-            <Detail />
+            <Swiper
+                className="swiper"
+                onSlideChange={(swiper) => console.log('slide change',swiper)}
+                onSwiper={(swiper) => console.log(swiper)}
+            >
+                <SwiperSlide><Detail /></SwiperSlide>
+                <SwiperSlide><Detail /></SwiperSlide>
+                <SwiperSlide><Detail /></SwiperSlide>
+            </Swiper>
         </div>
         <div className="bottom">
             <div>

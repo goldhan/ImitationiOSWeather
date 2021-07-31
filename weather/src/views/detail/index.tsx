@@ -14,16 +14,19 @@ const Index = () => {
     const [dayData, setDayData] = useState<{ [key: string]: any }[]>([]);
     const domTemp = useRef<{ [key: string]: HTMLElement }>({});
     const lastScrollTop = useRef(0);
+    const lastInnerHeight = useRef(window.innerHeight);
     useEffect(() => {
         getData();
+
+        window.onresize = () => {
+            if (lastInnerHeight.current !== window.innerHeight && lastInnerHeight.current <= 750) {
+                window.location.reload();
+            }
+            lastInnerHeight.current = window.innerHeight;
+        }
     }, []);
     useEffect(() => {
         domTemp.current = {};
-        // const scroll = getDomWithClassName('detail');
-        // if (scroll) {
-        //     scroll.scrollTo(0, 0);
-        // }
-        // updateDomOffsetTops();
     }, [nowData, hourData, dayData]);
     // console.log($.scrollTo)
     const getData = () => {
@@ -106,7 +109,7 @@ const Index = () => {
             const p = 1 - target.scrollTop / h;
             // console.log(target.scrollTop)
             // if (isFloat.current && isScrollUp) {
-               
+
             // }
 
             if (p < 0) {
@@ -116,15 +119,15 @@ const Index = () => {
                 temperature.style.opacity = `${p}`;
                 detailTody.style.opacity = `${p}`;
             }
-            
-            
-            
+
+
+
             if (target.scrollTop < h && isFloat.current) {
                 isFloat.current = false;
                 // floatDetail.style.marginTop = `${containerHeadH}px`;
                 detailScrollWrapped.style.overflow = 'hidden';
             }
-            
+
             if (isScrollUp && target.scrollTop >= h && !isFloat.current) {
                 isFloat.current = true;
                 target.scrollTo(0, h);
@@ -154,7 +157,7 @@ const Index = () => {
             if (isScrollUp) {
                 containerScroll.style.overflow = 'hidden';
             }
-            
+
         }
     }
 

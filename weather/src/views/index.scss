@@ -1,5 +1,5 @@
 .main-container {
-    position: fixed;
+    position: absolute;
     height: 100%;
     width: 100%;
 
@@ -10,7 +10,7 @@
         top: 0;
         left: 0;
         z-index: 0;
-
+        overflow: hidden;
         img {
             height: 100%
         }
@@ -25,6 +25,10 @@
         left: 0;
         z-index: 1;
         overflow: hidden;
+        .swiper {
+            height: 100%;
+            width: 100%;
+        }
     }
 
     .bottom {
