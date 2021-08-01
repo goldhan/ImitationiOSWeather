@@ -5,7 +5,8 @@ const isEnvPro = false;
 const HFAPIKEY = "eb3f2048fd264f6cbc6f49be9d472b9d";
 const HFAPIURLPRO = "https://api.qweather.com/v7/weather";
 const HFAPIURLDEV = "https://devapi.qweather.com/v7/weather";
-const HFICONURL = "https://raw.githubusercontent.com/qwd/WeatherIcon/master/weather-icon-S2/64"; // /105.png
+const HFAPIGEO = "https://geoapi.qweather.com/v2";
+// const HFICONURL = "https://raw.githubusercontent.com/qwd/WeatherIcon/master/weather-icon-S2/64"; // /105.png
 let Instance: any;
 class Net {
 
@@ -15,12 +16,12 @@ class Net {
         return Instance
     }
 
-    constructor() {
 
-    }
-
-    getWithApi = (api:string, parm?: {[key:string]:any}):Promise<any> => {
-        const url = isEnvPro ? HFAPIURLPRO : HFAPIURLDEV;
+    getWithApi = (api:string, parm?: {[key:string]:any}, isGEOApi = false):Promise<any> => {
+        let url = isEnvPro ? HFAPIURLPRO : HFAPIURLDEV;
+        if (isGEOApi) {
+            url = HFAPIGEO;
+        }
         let parmStr = `?key=${HFAPIKEY}`;
         if (parm) {
             for (const key in parm) {

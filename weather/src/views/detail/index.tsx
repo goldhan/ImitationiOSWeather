@@ -2,13 +2,19 @@ import React, { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 import net from "../../utils/net";
 import './index.scss';
-const TESTCity = "101280601";
+
 const HFICONURL = "https://raw.githubusercontent.com/qwd/WeatherIcon/master/weather-icon-S2/64"; // /105.png
 
+interface Props {
+    cityName: string,
+    cityId: string,
+    index: number
+}
 
-const Index = () => {
+const Index = (prop: Props) => {
+    const {cityName, cityId, index} = prop;
     const isFloat = useRef(false);
-    const itemTop = useRef<{ [key: string]: HTMLElement }>({});
+    // const itemTop = useRef<{ [key: string]: HTMLElement }>({});
     const [nowData, setNowData] = useState<{ [key: string]: any }>({});
     const [hourData, setHourData] = useState<{ [key: string]: any }[]>([]);
     const [dayData, setDayData] = useState<{ [key: string]: any }[]>([]);
@@ -16,7 +22,25 @@ const Index = () => {
     const lastScrollTop = useRef(0);
     const lastInnerHeight = useRef(window.innerHeight);
     useEffect(() => {
-        getData();
+        getData(cityId);
+
+        // net.getWithApi("/now", { location: cityId }).then((r) => {
+        //     if (r.code === '200') {
+        //         setNowData(r.now);
+        //     }
+        // });
+        // net.getWithApi("/24h", { location: cityId }).then((r) => {
+        //     if (r.code === '200') {
+        //         setHourData(r.hourly);
+        //     }
+        // });
+        // net.getWithApi("/10d", { location: cityId }).then((r) => {
+        //     if (r.code === '200') {
+        //         setDayData(r.daily);
+        //     }
+        // }).finally(() => {
+        //     // updateDomOffsetTops();
+        // });
 
         window.onresize = () => {
             if (lastInnerHeight.current !== window.innerHeight && lastInnerHeight.current <= 750) {
@@ -24,23 +48,23 @@ const Index = () => {
             }
             lastInnerHeight.current = window.innerHeight;
         }
-    }, []);
+    }, [cityId]);
     useEffect(() => {
         domTemp.current = {};
     }, [nowData, hourData, dayData]);
     // console.log($.scrollTo)
-    const getData = () => {
-        net.getWithApi("/now", { location: TESTCity }).then((r) => {
+    const getData = (cityId:string) => {
+        net.getWithApi("/now", { location: cityId }).then((r) => {
             if (r.code === '200') {
                 setNowData(r.now);
             }
         });
-        net.getWithApi("/24h", { location: TESTCity }).then((r) => {
+        net.getWithApi("/24h", { location: cityId }).then((r) => {
             if (r.code === '200') {
                 setHourData(r.hourly);
             }
         });
-        net.getWithApi("/10d", { location: TESTCity }).then((r) => {
+        net.getWithApi("/10d", { location: cityId }).then((r) => {
             if (r.code === '200') {
                 setDayData(r.daily);
             }
@@ -50,21 +74,21 @@ const Index = () => {
     }
 
 
-    const updateDomOffsetTops = () => {
-        const scroll = getDomWithClassName('detail');
-        scroll.style.overflow = 'hidden';
-        if (scroll) {
-            scroll.scrollTo(0, 0);
-        }
-        const arr = document.getElementsByClassName('day-item');
-        if (arr) {
-            for (let index = 0; index < arr.length; index++) {
-                const element = arr[index] as HTMLElement;
-                itemTop.current[`${element.offsetTop}`] = element
-            }
-        }
-        scroll.style.overflow = 'auto';
-    }
+    // const updateDomOffsetTops = () => {
+    //     const scroll = getDomWithClassName('detail');
+    //     scroll.style.overflow = 'hidden';
+    //     if (scroll) {
+    //         scroll.scrollTo(0, 0);
+    //     }
+    //     const arr = document.getElementsByClassName('day-item');
+    //     if (arr) {
+    //         for (let index = 0; index < arr.length; index++) {
+    //             const element = arr[index] as HTMLElement;
+    //             itemTop.current[`${element.offsetTop}`] = element
+    //         }
+    //     }
+    //     scroll.style.overflow = 'auto';
+    // }
 
     const getDomWithClassName = (className: string): HTMLElement => {
         let dom = domTemp.current[className];
@@ -90,16 +114,14 @@ const Index = () => {
         if (ev.target) {
             const target = ev.target as HTMLElement;
 
-            const temperature = getDomWithClassName('head-temperature');
-            const detailTody = getDomWithClassName('detail-tody');
-            const floatDetail = getDomWithClassName('float-detail');
-            const detailScrollWrapped = getDomWithClassName('detail-scroll-wrapped');
+            const temperature = getDomWithClassName(`head-temperature index-${index}`);
+            const detailTody = getDomWithClassName(`detail-tody index-${index}`);
+            const detailScrollWrapped = getDomWithClassName(`detail-scroll-wrapped index-${index}`);
 
-            const containerHeadH = getDomHeight("container-head");
-            const temperatureH = getDomHeight("head-temperature");
-            const detailHeadH = getDomHeight('detail-head');
-            const detailTodyH = getDomHeight('detail-tody');
-            const detailContainerH = getDomHeight('detail-container');
+            const temperatureH = getDomHeight(`head-temperature index-${index}`);
+            const detailHeadH = getDomHeight(`detail-head index-${index}`);
+            const detailTodyH = getDomHeight(`detail-tody index-${index}`);
+            const detailContainerH = getDomHeight(`detail-container index-${index}`);
 
             const isScrollUp = lastContainerScrollTop.current - target.scrollTop < 0;
             lastContainerScrollTop.current = target.scrollTop;
@@ -143,7 +165,7 @@ const Index = () => {
     const detailOnScroll = (ev: React.UIEvent<React.ReactNode>) => {
         if (ev.target) {
             const target = ev.target as HTMLElement;
-            const containerScroll = getDomWithClassName('container-scroll');
+            const containerScroll = getDomWithClassName(`container-scroll index-${index}`);
             // const floatDetail = getDomWithClassName('float-detail');
             // const containerHeadH = getDomHeight("container-head");
             const isScrollUp = lastScrollTop.current - target.scrollTop < 0;
@@ -184,15 +206,15 @@ const Index = () => {
         return `星期${parm[parseInt(str, 10)]}`;
     }
 
-    return <div className="detail-container">
+    return <div className={`detail-container index-${index}`}>
         <div className="container-head">
-            <p className="head-location">福田区</p>
+            <p className="head-location">{cityName || '--'}</p>
             <p className="head-status">{nowData.text || '--'}</p>
-            <p className="head-temperature">{nowData.temp || '--'}°</p>
+            <p className={`head-temperature index-${index}`}>{nowData.temp || '--'}°</p>
         </div>
-        <div className="container-scroll" onScroll={containerOnScroll}>
+        <div className={`container-scroll index-${index}`} onScroll={containerOnScroll}>
             <div className="float-detail">
-                <div className="detail-tody">
+                <div className={`detail-tody index-${index}`}>
                     <div className="detail-tody-wrapped">
                         <div className="tody-time">{`${getWeek(todayData.fxDate)} 今天`}</div>
                         <div className="tody-temp">
@@ -200,10 +222,10 @@ const Index = () => {
                         </div>
                     </div>
                 </div>
-                <div className="detail-head">
+                <div className={`detail-head index-${index}`}>
                     <div className="content">
                         {hourData.map((item, index) => {
-                            const key = `detail-head-key-${index}`;
+                            const key = `detail-head-key-index-${index}`;
                             const time = item.fxTime.split("T")[1].split(":")[0];
                             return <div key={key} className="hour">
                                 <div>{time}时</div>
@@ -218,14 +240,14 @@ const Index = () => {
                     </div>
                 </div>
             </div>
-            <div className="detail-scroll-wrapped" onScroll={detailOnScroll}>
+            <div className={`detail-scroll-wrapped index-${index}`} onScroll={detailOnScroll}>
                 {/* <div className="space" /> */}
                 <div className="detail-scroll">
                     <div className="detail-space" />
                     <div className="detail-content">
                         <div className="day">
                             {dayData.map((item, index) => {
-                                const key = `day-key-${index}`;
+                                const key = `day-key-index-${index}`;
                                 const time = getWeek(item.fxDate);
                                 if (index === 0) return null;
                                 return <div key={key} className="day-item">
@@ -246,7 +268,7 @@ const Index = () => {
                         </div>
                         <div className="other">
                             {detailInfoArr.map((item, index) => {
-                                const key = `info-key-${index}`;
+                                const key = `info-key-index-${index}`;
                                 return <div key={key} className="info-item">
                                     <div className="item-wrapped">
                                         <span>{item[0]}:</span>

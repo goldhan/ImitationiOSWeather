@@ -1,6 +1,5 @@
 .detail-container {
 
-    color: white;
     font-size: 14px;
     height: 100%;
 
@@ -126,34 +125,6 @@
     }
 
     .detail-scroll {
-        // position: absolute;
-        // top: 0;
-        // left: 0;
-        // height: 100%;
-        // width: 100%;
-        // overflow: auto;
-        // margin-top: 0;
-
-        .detail-space {
-            // height: 283px;
-        }
-
-        .detail-tody {
-            .detail-tody-wrapped {
-                display: flex;
-                padding: 8px 16px;
-                justify-content: space-between;
-                align-items: center;
-
-                .tody-temp {
-                    span {
-                        opacity: 0.65;
-                        padding-left: 16px;
-                    }
-                }
-            }
-
-        }
 
         .detail-head {
 
