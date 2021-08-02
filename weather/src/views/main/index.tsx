@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useImperativeHandle, Ref, forwardRef } from "react";
 import Detail from '../detail';
-import net from "../../utils/net";
-import storage from '../../utils/storage';
+import CityManager, {City} from "../../utils/cityManager";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperClass from 'swiper/types/swiper-class';
 import listIcon from '../../res/list_white_24dp.svg';
@@ -9,75 +8,27 @@ import nearIcon from '../../res/near_me_white_24dp.svg';
 import 'swiper/swiper.scss';
 import './index.scss';
 interface Props {
-    className: string,
-    goto: (page:string)=>void
+    className?: string,
+    refInstance?: Ref<any>
+    goto: (page: string) => void
 }
-const Index = (prop: Props) => {
-    const { goto, className } = prop;
-    const [citys, setCitys] = useState<{ [key: string]: string | boolean }[]>([]);
+interface _Props extends Props  {
+    refInstance?: Ref<any>
+}
+
+const Index = (prop: _Props ) => {
+    const { goto, className, refInstance } = prop;
+    const [citys, setCitys] = useState<City[]>([]);
     const [selected, setSelected] = useState(0);
     const [swiper, setSwiper] = useState<SwiperClass | null>(null);
     useEffect(() => {
-        getStorageData();
+    //    refresh();
     }, []);
-
-    const getStorageData = () => {
-        const l = storage.get('citys');
-        if (l) {
-            const {data} = l;
-            setCitys(data);
-        } else {
-            getLocation();
-        }
+    const refresh = () => {
+        CityManager.getCitys().then((citys) => setCitys(citys));
     }
-
-    const getLocation = () => {
-        const l = storage.get('Location');
-        if (l) {
-            getCityWithLocation(l);
-        } else {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((res) => {
-                    const { latitude, longitude } = res.coords;
-                    const r = {
-                        latitude: `${latitude}`,
-                        longitude: `${longitude}`,
-                    };
-                    storage.set('Location', r);
-                    getCityWithLocation(r);
-                }, (err) => {
-
-                });
-            } else {
-            }
-        }
-    }
-
-    const getCityWithLocation = (loc: { [key: string]: string }) => {
-        const { latitude, longitude } = loc;
-        const {data: citys} = storage.get('citys') || {data:[]};
-        net.getWithApi('/city/lookup', { location: `${longitude},${latitude}` }, true).then((resp) => {
-            if (resp.code === '200' && resp.location && resp.location.length) {
-                const { name, id } = resp.location[0];
-                const city = {cityName: name, cityId: id, isNear: true};
-                let citysTemp = [city];
-                if (citys.length) {
-                    if (citys[0].isNear) {
-                        citys[0] =  city
-                        citysTemp = citys;
-                    } else {
-                        citysTemp = [
-                            city,
-                            ...citys
-                        ];
-                    }
-                }
-                storage.set('citys',{data: citysTemp});
-                setCitys(citysTemp);
-            }
-            
-        });
-    }
+    useImperativeHandle(refInstance, () => ({ refresh }));
+    
 
     return <div className={`main-container ${className || ''}`}>
         {citys.length ? <React.Fragment>
@@ -138,4 +89,4 @@ const Index = (prop: Props) => {
     </div>
 }
 
-export default Index;
+export default forwardRef((props: Props, ref: Ref<any>) => <Index {...props} refInstance={ref}/>);

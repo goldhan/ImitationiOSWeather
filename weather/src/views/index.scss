@@ -1,0 +1,31 @@
+.container {
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+
+    .main-view,
+    .list-view {
+        transition: all 0.3s;
+        top: 100%;
+    }
+
+
+
+    .main-view {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        display: initial;
+    }
+
+    .list-view {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        
+    }
+
+}
