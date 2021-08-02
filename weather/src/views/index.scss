@@ -55,6 +55,9 @@
         bottom: 0;
         left: 0;
         z-index: 2;
+        img {
+            opacity: 0.35;
+        }
 
         &::before {
             content: '';
@@ -101,8 +104,8 @@
 
                 img {
                     background: transparent !important;
-                    width: 15px !important;
-                    height: 15px !important;
+                    width: 10px !important;
+                    height: 10px !important;
                 }
 
                 .point {
@@ -123,7 +126,6 @@
 
         .support {
             img {
-                opacity: 0.2;
                 width: 24px;
             }
         }

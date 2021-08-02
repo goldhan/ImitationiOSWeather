@@ -95,7 +95,7 @@ const Index = (prop: Props) => {
         if (dom) {
             return dom;
         }
-        dom = document.getElementsByClassName(className)[0] as HTMLElement;
+        dom = document.getElementsByClassName(`${className} index-${index}`)[0] as HTMLElement;
         domTemp.current[className] = dom;
         return dom;
     }
@@ -114,14 +114,15 @@ const Index = (prop: Props) => {
         if (ev.target) {
             const target = ev.target as HTMLElement;
 
-            const temperature = getDomWithClassName(`head-temperature index-${index}`);
-            const detailTody = getDomWithClassName(`detail-tody index-${index}`);
-            const detailScrollWrapped = getDomWithClassName(`detail-scroll-wrapped index-${index}`);
+            const temperature = getDomWithClassName('head-temperature');
+            const containerHead = getDomWithClassName('container-head');
+            const detailTody = getDomWithClassName('detail-tody');
+            const detailScrollWrapped = getDomWithClassName('detail-scroll-wrapped');
 
-            const temperatureH = getDomHeight(`head-temperature index-${index}`);
-            const detailHeadH = getDomHeight(`detail-head index-${index}`);
-            const detailTodyH = getDomHeight(`detail-tody index-${index}`);
-            const detailContainerH = getDomHeight(`detail-container index-${index}`);
+            const temperatureH = getDomHeight('head-temperature');
+            const detailHeadH = getDomHeight('detail-head');
+            const detailTodyH = getDomHeight('detail-tody');
+            const detailContainerH = getDomHeight('detail-container');
 
             const isScrollUp = lastContainerScrollTop.current - target.scrollTop < 0;
             lastContainerScrollTop.current = target.scrollTop;
@@ -137,9 +138,11 @@ const Index = (prop: Props) => {
             if (p < 0) {
                 temperature.style.opacity = "0";
                 detailTody.style.opacity = "0";
+                containerHead.style.marginTop = "0";
             } else {
                 temperature.style.opacity = `${p}`;
                 detailTody.style.opacity = `${p}`;
+                containerHead.style.marginTop = `${p * 10}px`;
             }
 
 
@@ -165,7 +168,7 @@ const Index = (prop: Props) => {
     const detailOnScroll = (ev: React.UIEvent<React.ReactNode>) => {
         if (ev.target) {
             const target = ev.target as HTMLElement;
-            const containerScroll = getDomWithClassName(`container-scroll index-${index}`);
+            const containerScroll = getDomWithClassName('container-scroll');
             // const floatDetail = getDomWithClassName('float-detail');
             // const containerHeadH = getDomHeight("container-head");
             const isScrollUp = lastScrollTop.current - target.scrollTop < 0;
@@ -207,7 +210,7 @@ const Index = (prop: Props) => {
     }
 
     return <div className={`detail-container index-${index}`}>
-        <div className="container-head">
+        <div className={`container-head index-${index}`}>
             <p className="head-location">{cityName || '--'}</p>
             <p className="head-status">{nowData.text || '--'}</p>
             <p className={`head-temperature index-${index}`}>{nowData.temp || '--'}°</p>

@@ -1,20 +1,20 @@
 
 
-@media only screen and (min-width: 500px) {
+@media only screen and (min-width: 375px) {
   .App {
     position: absolute;
-    top: calc((100% - 750px) / 2);
-    left: calc((100% - 500px) / 2);;
-    width: 500px !important;
-    height: 750px;
+    top: calc((100% - 667px) / 2);
+    left: calc((100% - 375px) / 2);;
+    width: 375px !important;
+    height: 667px;
   }
 }
 
-@media only screen and (min-height: 750px) {
+@media only screen and (min-height: 667px) {
   .App {
     position: absolute;
-    height: 750px;
+    height: 667px;
     width: 100%;
-    top: calc((100% - 750px) / 2);
+    top: calc((100% - 667px) / 2);
   }
 }
