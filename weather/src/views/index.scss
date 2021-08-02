@@ -6,26 +6,26 @@
 
 
     .main-view,
+    .search-view,
     .list-view {
         transition: all 0.3s;
+        position: absolute;
+        width: 100%;
+        height: 100%;
         top: 100%;
     }
 
 
 
     .main-view {
-        position: absolute;
-        width: 100%;
-        height: 100%;
         top: 0;
         display: initial;
     }
 
-    .list-view {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        
+    .list-view {}
+
+    .search-view {
+
     }
 
 }

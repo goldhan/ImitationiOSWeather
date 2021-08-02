@@ -1,4 +1,5 @@
-import React, { useState, useImperativeHandle, Ref, forwardRef } from 'react';
+import React, { useState, useImperativeHandle, Ref, forwardRef, useEffect } from 'react';
+import { NavigatorController } from "..";
 import CityManager, { City } from "../../utils/cityManager";
 import Add from '../../res/add_circle_outline_white_24dp.svg';
 
@@ -16,6 +17,9 @@ interface _Props extends Props {
 const Index = (prop: _Props) => {
     const { className, goto, refInstance, onClick } = prop;
     const [citys, setCitys] = useState<City[]>([]);
+    useEffect(() => {
+        refresh();
+    }, [])
     const refresh = () => {
         CityManager.getCitys().then((citys) => setCitys(citys));
     }
@@ -29,7 +33,10 @@ const Index = (prop: _Props) => {
         <div className="content">
             {citys.map((item, index) => {
                 const key = `city-key-${index}`;
-                return <div key={key} className="item"  onClick={() => {if (onClick) onClick(item)}}>
+                return <div key={key} className="item"  onClick={() => {
+                    if (onClick) onClick(item)
+                    NavigatorController.Instance().pop();
+                    }}>
                     <img className="item-bg" src="https://images.unsplash.com/photo-1534088568595-a066f410bcda?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=989&q=80" alt="" />
                     <div className="item-content-wrapped">
                         <div className="item-content">
@@ -48,7 +55,10 @@ const Index = (prop: _Props) => {
                 <div>
                     <span>℃</span>/<span>℉</span>
                 </div>
-                <div><img alt="add" src={Add} /></div>
+                <div onClick={() => {
+                    // if (goto) goto('Search');
+                    NavigatorController.Instance().push('search-view');
+            }} ><img alt="add" src={Add} /></div>
             </div>
         </div>
     </div>

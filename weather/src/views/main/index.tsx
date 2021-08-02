@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useImperativeHandle, Ref, forwardRef } from "react";
 import Detail from '../detail';
 import CityManager, {City} from "../../utils/cityManager";
+import { NavigatorController } from "..";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperClass from 'swiper/types/swiper-class';
 import listIcon from '../../res/list_white_24dp.svg';
@@ -9,7 +10,6 @@ import 'swiper/swiper.scss';
 import './index.scss';
 interface Props {
     className?: string,
-    refInstance?: Ref<any>
     goto: (page: string) => void
 }
 interface _Props extends Props  {
@@ -27,7 +27,12 @@ const Index = (prop: _Props ) => {
     const refresh = () => {
         CityManager.getCitys().then((citys) => setCitys(citys));
     }
-    useImperativeHandle(refInstance, () => ({ refresh }));
+    const slideTo = (index:number) => {
+        if (swiper) {
+            swiper.slideTo(index);
+        }
+    }
+    useImperativeHandle(refInstance, () => ({ refresh, slideTo }));
     
 
     return <div className={`main-container ${className || ''}`}>
@@ -63,9 +68,7 @@ const Index = (prop: _Props ) => {
                             {citys.map((item, index) => {
                                 const key = `point-key-${index}`;
                                 return <div key={key} onClick={() => {
-                                    if (swiper) {
-                                        swiper.slideTo(index);
-                                    }
+                                    slideTo(index);
                                 }}>
                                     {item.isNear ? <img className={selected === index ? "point selected" : 'point'} alt="near" src={nearIcon} /> : <div className={selected === index ? "point selected" : 'point'} />}
                                 </div>
@@ -77,7 +80,10 @@ const Index = (prop: _Props ) => {
                             }
                         }} />
                     </div>
-                    <div className="menu" onClick={() => {if (goto) goto('List')}}>
+                    <div className="menu" onClick={() => {
+                        // if (goto) goto('List')
+                        NavigatorController.Instance().push('list-view');
+                    }}>
                         <img alt="list" src={listIcon} />
                     </div>
                 </div>
