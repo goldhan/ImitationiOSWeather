@@ -23,25 +23,6 @@ const Index = (prop: Props) => {
     const lastInnerHeight = useRef(window.innerHeight);
     useEffect(() => {
         getData(cityId);
-
-        // net.getWithApi("/now", { location: cityId }).then((r) => {
-        //     if (r.code === '200') {
-        //         setNowData(r.now);
-        //     }
-        // });
-        // net.getWithApi("/24h", { location: cityId }).then((r) => {
-        //     if (r.code === '200') {
-        //         setHourData(r.hourly);
-        //     }
-        // });
-        // net.getWithApi("/10d", { location: cityId }).then((r) => {
-        //     if (r.code === '200') {
-        //         setDayData(r.daily);
-        //     }
-        // }).finally(() => {
-        //     // updateDomOffsetTops();
-        // });
-
         window.onresize = () => {
             if (lastInnerHeight.current !== window.innerHeight && lastInnerHeight.current <= 750) {
                 window.location.reload();
@@ -134,7 +115,6 @@ const Index = (prop: Props) => {
             // if (isFloat.current && isScrollUp) {
 
             // }
-
             if (p < 0) {
                 temperature.style.opacity = "0";
                 detailTody.style.opacity = "0";
@@ -179,7 +159,7 @@ const Index = (prop: Props) => {
                 containerScroll.style.overflow = 'auto';
                 // target.style.overflow = 'hidden';
             }
-            if (isScrollUp) {
+            if (isScrollUp && target.scrollTop) {
                 containerScroll.style.overflow = 'hidden';
             }
 
