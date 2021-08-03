@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import dayjs from "dayjs";
-import net from "../../utils/net";
+import tempCache, { CityTemp } from "../../utils/tempCache";
 import './index.scss';
 
 const HFICONURL = "https://raw.githubusercontent.com/qwd/WeatherIcon/master/weather-icon-S2/64"; // /105.png
@@ -8,16 +7,45 @@ const HFICONURL = "https://raw.githubusercontent.com/qwd/WeatherIcon/master/weat
 interface Props {
     cityName: string,
     cityId: string,
-    index: number
+    index: number,
+    isNear: boolean
 }
 
 const Index = (prop: Props) => {
-    const {cityName, cityId, index} = prop;
+    const { cityName, cityId, index, isNear } = prop;
     const isFloat = useRef(false);
-    // const itemTop = useRef<{ [key: string]: HTMLElement }>({});
-    const [nowData, setNowData] = useState<{ [key: string]: any }>({});
-    const [hourData, setHourData] = useState<{ [key: string]: any }[]>([]);
-    const [dayData, setDayData] = useState<{ [key: string]: any }[]>([]);
+    const [data, setData] = useState<CityTemp>({
+        updateTime: 0,
+        cityName,
+        cityId,
+        index,
+        isNear,
+        base: {
+            text: '--',
+            temp: '--',
+            icon: '--',
+            windDir: '--',
+            windSpeed: '--',
+            windScale: '--',
+            tempMax: '--',
+            tempMin: '--',
+            week: '--',
+            hour: '--',
+            iconDay: '--',
+        },
+        detail: {
+            sunrise: '--',
+            sunset: '--',
+            humidity: '--',
+            windSpeed: '--',
+            precip: '--',
+            pressure: '--',
+            vis: '--',
+            uvIndex: '--',
+        },
+        days: [],
+        hours: [],
+    });
     const domTemp = useRef<{ [key: string]: HTMLElement }>({});
     const lastScrollTop = useRef(0);
     const lastInnerHeight = useRef(window.innerHeight);
@@ -32,44 +60,13 @@ const Index = (prop: Props) => {
     }, [cityId]);
     useEffect(() => {
         domTemp.current = {};
-    }, [nowData, hourData, dayData]);
+    }, [data]);
     // console.log($.scrollTo)
-    const getData = (cityId:string) => {
-        net.getWithApi("/now", { location: cityId }).then((r) => {
-            if (r.code === '200') {
-                setNowData(r.now);
-            }
-        });
-        net.getWithApi("/24h", { location: cityId }).then((r) => {
-            if (r.code === '200') {
-                setHourData(r.hourly);
-            }
-        });
-        net.getWithApi("/10d", { location: cityId }).then((r) => {
-            if (r.code === '200') {
-                setDayData(r.daily);
-            }
-        }).finally(() => {
-            // updateDomOffsetTops();
-        });
+    const getData = (cityId: string) => {
+        tempCache.getDataWithCity({ cityName, cityId, index, isNear }).then((r) => {
+            setData(r);
+        })
     }
-
-
-    // const updateDomOffsetTops = () => {
-    //     const scroll = getDomWithClassName('detail');
-    //     scroll.style.overflow = 'hidden';
-    //     if (scroll) {
-    //         scroll.scrollTo(0, 0);
-    //     }
-    //     const arr = document.getElementsByClassName('day-item');
-    //     if (arr) {
-    //         for (let index = 0; index < arr.length; index++) {
-    //             const element = arr[index] as HTMLElement;
-    //             itemTop.current[`${element.offsetTop}`] = element
-    //         }
-    //     }
-    //     scroll.style.overflow = 'auto';
-    // }
 
     const getDomWithClassName = (className: string): HTMLElement => {
         let dom = domTemp.current[className];
@@ -166,7 +163,14 @@ const Index = (prop: Props) => {
         }
     }
 
-    const todayData = dayData[0] || {};
+    // base: BaseInfo
+    // detail: DetailInfo
+    // days: BaseInfo[]
+    // hours: BaseInfo[]
+    // updateTime: number
+    const { base, detail, days, hours } = data;
+
+    const todayData = days && days[0] ? days[0] : base;
     const detailInfoArr = [
         ["日出", "sunrise"],
         ["日落", "sunset"],
@@ -180,26 +184,17 @@ const Index = (prop: Props) => {
         ["紫外线指数", "uvIndex"],
     ]
 
-    const getWeek = (date: string): string => {
-        const str = dayjs(date).format('d');
-        const parm = ["天", "一", "二", "三", "四", "五", "六"]
-        // if (date === dayjs().format("YYYY-MM-DD")) {
-        //     return '今天';
-        // }
-        return `星期${parm[parseInt(str, 10)]}`;
-    }
-
     return <div className={`detail-container index-${index}`}>
         <div className={`container-head index-${index}`}>
             <p className="head-location">{cityName || '--'}</p>
-            <p className="head-status">{nowData.text || '--'}</p>
-            <p className={`head-temperature index-${index}`}>{nowData.temp || '--'}°</p>
+            <p className="head-status">{base.text || '--'}</p>
+            <p className={`head-temperature index-${index}`}>{base.temp || '--'}°</p>
         </div>
         <div className={`container-scroll index-${index}`} onScroll={containerOnScroll}>
             <div className="float-detail">
                 <div className={`detail-tody index-${index}`}>
                     <div className="detail-tody-wrapped">
-                        <div className="tody-time">{`${getWeek(todayData.fxDate)} 今天`}</div>
+                        <div className="tody-time">{`${todayData.week} 今天`}</div>
                         <div className="tody-temp">
                             {todayData.tempMax}<span>{todayData.tempMin}</span>
                         </div>
@@ -207,11 +202,10 @@ const Index = (prop: Props) => {
                 </div>
                 <div className={`detail-head index-${index}`}>
                     <div className="content">
-                        {hourData.map((item, index) => {
+                        {hours.map((item, index) => {
                             const key = `detail-head-key-index-${index}`;
-                            const time = item.fxTime.split("T")[1].split(":")[0];
                             return <div key={key} className="hour">
-                                <div>{time}时</div>
+                                <div>{item.hour}时</div>
                                 <div>
                                     <img src={`${HFICONURL}/${item.icon}.png`} alt="icon" />
                                 </div>
@@ -229,13 +223,13 @@ const Index = (prop: Props) => {
                     <div className="detail-space" />
                     <div className="detail-content">
                         <div className="day">
-                            {dayData.map((item, index) => {
+                            {days.map((item, index) => {
                                 const key = `day-key-index-${index}`;
-                                const time = getWeek(item.fxDate);
+
                                 if (index === 0) return null;
                                 return <div key={key} className="day-item">
                                     <div className="item-wrapped">
-                                        <div className="time">{time}</div>
+                                        <div className="time">{item.week}</div>
                                         <div className="icon">
                                             <img src={`${HFICONURL}/${item.iconDay}.png`} alt="icon" />
                                         </div>
@@ -247,15 +241,16 @@ const Index = (prop: Props) => {
                             })}
                         </div>
                         <div className="desc">
-                            今天：{`${nowData.text}`}，{`${nowData.windDir}`}{`${nowData.windSpeed}`}公里/小时。最高气温{`${todayData.tempMax || '--'}`}°，最低气温{`${todayData.tempMin || '--'}`}°
+                            今天：{`${base.text}`}，{`${base.windDir}`}{`${base.windSpeed}`}公里/小时。最高气温{`${base.tempMax || '--'}`}°，最低气温{`${base.tempMin || '--'}`}°
                         </div>
                         <div className="other">
                             {detailInfoArr.map((item, index) => {
                                 const key = `info-key-index-${index}`;
+                                const t = detail as any;
                                 return <div key={key} className="info-item">
                                     <div className="item-wrapped">
                                         <span>{item[0]}:</span>
-                                        <span>{todayData[item[1]]}</span>
+                                        <span>{t[item[1]]}</span>
                                     </div>
                                 </div>
                             })}

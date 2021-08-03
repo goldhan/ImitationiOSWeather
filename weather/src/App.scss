@@ -1,9 +1,8 @@
 @media only screen and (min-width: 375px) {
   .App {
     position: absolute;
-    top: calc((100% - 667px) / 2);
+    top: 0;
     left: calc((100% - 375px) / 2);
-    ;
     width: 375px !important;
     height: 667px;
   }
@@ -14,6 +13,6 @@
     position: absolute;
     height: 667px;
     width: 100%;
-    top: calc((100% - 667px) / 2);
+    top: 0;
   }
 }

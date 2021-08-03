@@ -69,26 +69,21 @@ export class NavigatorController {
         })
     }
 
-    getRootView = ():string => {
+    getRootView = (): string => {
         return document.getElementsByClassName('nav')[0].children[0].className;
     }
- 
+
     createNavigatorController = (views: ReactElement[]) => {
-        this.views = [];
+        this.setRootView(views[0].props.className || '');
         return <div className="container nav">
-            {views.map((item, index) => {
-                if (index === 0) {
-                    this.setRootView(item.props.className || '')
-                }
-                return item;
-            })}
+            {views}
         </div>
     }
-
 }
 
 interface RefInterface {
     refresh: () => void
+    slideTo: (index:number) => void
 }
 const Index = () => {
     const main = useRef<RefInterface | null>(null);
@@ -102,9 +97,18 @@ const Index = () => {
     return NavigatorController.Instance().createNavigatorController([
         <div className="main-view" key="main-view"><Main ref={main} /></div>,
         <div className="list-view" key="list-view"><List ref={list} onClick={(city) => {
-            // goto('Main');
+            if (main.current) {
+                main.current.slideTo(city.index);
+            }
         }} /></div>,
-        <div className="search-view" key="search-view"><Search ref={list} /></div>
+        <div className="search-view" key="search-view"><Search onClick={(city) => {
+            if (list.current) {
+                list.current.refresh();
+            }
+            if (main.current) {
+                main.current.refresh();
+            }
+        }} /></div>
     ])
 }
 

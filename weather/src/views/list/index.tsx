@@ -1,6 +1,7 @@
 import React, { useState, useImperativeHandle, Ref, forwardRef, useEffect } from 'react';
 import { NavigatorController } from "..";
 import CityManager, { City } from "../../utils/cityManager";
+import tempCache, { CityTemp } from "../../utils/tempCache";
 import Add from '../../res/add_circle_outline_white_24dp.svg';
 
 import './index.scss';
@@ -16,16 +17,21 @@ interface _Props extends Props {
 
 const Index = (prop: _Props) => {
     const { className, goto, refInstance, onClick } = prop;
-    const [citys, setCitys] = useState<City[]>([]);
+    const [citys, setCitys] = useState<CityTemp[]>([]);
     useEffect(() => {
         refresh();
         // NavigatorController.Instance().push('search-view');
         NavigatorController.Instance().cycle((act, from, to, parm) => {
-            console.log(act, from, to, parm);
+            // console.log(act, from, to, parm);
+            if (act === 'pop' && from === 'search-list' && parm) {
+                
+            }
         });
     }, [])
     const refresh = () => {
-        CityManager.getCitys().then((citys) => setCitys(citys));
+        CityManager.getCitys().then((citys) => {
+            tempCache.getDataWithCitys(citys, true).then((r) => setCitys(r));
+        });
     }
     useImperativeHandle(refInstance, () => ({ refresh }));
 
@@ -49,7 +55,7 @@ const Index = (prop: _Props) => {
                                 <span className="city-name">{item.cityName}</span>
                             </div>
                             <div>
-                                <span className="temp">26°</span>
+                                <span className="temp">{item.base.temp}°</span>
                             </div>
                         </div>
                     </div>

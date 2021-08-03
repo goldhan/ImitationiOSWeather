@@ -23,6 +23,12 @@ class CityManager {
         this.citys = [];
     }
 
+    addCity = (city: City) => {
+        const filter = this.citys.filter((item) => item.cityId !== city.cityId);
+        this.citys = [...filter, { ...city, index: filter.length }];
+        storage.set('citys', { data: this.citys });
+    }
+
     getCitys = (): Promise<City[]> => {
 
         return new Promise((r, e) => {

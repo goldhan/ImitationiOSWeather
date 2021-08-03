@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useImperativeHandle, Ref, forwardRef } from "react";
 import Detail from '../detail';
-import CityManager, {City} from "../../utils/cityManager";
+import CityManager, { City } from "../../utils/cityManager";
 import { NavigatorController } from "..";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperClass from 'swiper/types/swiper-class';
@@ -12,31 +12,37 @@ interface Props {
     className?: string,
     goto?: (page: string) => void
 }
-interface _Props extends Props  {
+interface _Props extends Props {
     refInstance?: Ref<any>
 }
 
-const Index = (prop: _Props ) => {
+const Index = (prop: _Props) => {
     const { goto, className, refInstance } = prop;
     const [citys, setCitys] = useState<City[]>([]);
     const [selected, setSelected] = useState(0);
     const [swiper, setSwiper] = useState<SwiperClass | null>(null);
+    const [isGetCityFail, setIsGetCityFail] = useState(false);
     useEffect(() => {
-    //    refresh();
-        NavigatorController.Instance().cycle((act, from , to, parm) => {
+        //    refresh();
+        NavigatorController.Instance().cycle((act, from, to, parm) => {
             console.log(act, from, to, parm);
         });
     }, []);
     const refresh = () => {
-        CityManager.getCitys().then((citys) => setCitys(citys));
+        CityManager.getCitys().then((citys) => setCitys(citys)).catch((e) => {
+            // alert('获取定位失败');
+            setIsGetCityFail(true);
+            NavigatorController.Instance().push('search-view');
+        });
+        // setIsGetCityFail(true);
     }
-    const slideTo = (index:number) => {
+    const slideTo = (index: number) => {
         if (swiper) {
             swiper.slideTo(index);
         }
     }
     useImperativeHandle(refInstance, () => ({ refresh, slideTo }));
-    
+
 
     return <div className={`main-container ${className || ''}`}>
         {citys.length ? <React.Fragment>
@@ -51,8 +57,8 @@ const Index = (prop: _Props ) => {
                 >
                     {citys.map((item, index) => {
                         const key = `detail-key-${index}`;
-                        const { cityId, cityName } = item;
-                        return <SwiperSlide key={key}><Detail cityId={cityId as string} cityName={cityName as string} index={index} /></SwiperSlide>
+                        const { cityId, cityName, isNear } = item;
+                        return <SwiperSlide key={key}><Detail cityId={cityId} cityName={cityName} index={index} isNear={isNear} /></SwiperSlide>
                     })}
                 </Swiper>
             </div>
@@ -93,9 +99,14 @@ const Index = (prop: _Props ) => {
             </div>
         </React.Fragment> : <div className="status">
             Loading......
+            {isGetCityFail ? <div onClick={() => {
+                NavigatorController.Instance().push('search-view');
+            }}>
+                获取定位失败，点击搜索城市
+            </div> : null}
         </div>}
 
     </div>
 }
 
-export default forwardRef((props: Props, ref: Ref<any>) => <Index {...props} refInstance={ref}/>);
+export default forwardRef((props: Props, ref: Ref<any>) => <Index {...props} refInstance={ref} />);
