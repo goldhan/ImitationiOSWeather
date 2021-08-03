@@ -4,10 +4,11 @@ import { NavigatorController } from "..";
 import Search from '../../res/search_white_24dp.svg';
 
 import './index.scss';
+import { useEffect } from 'react';
 interface Props {
     className?: string,
     onClick?:(City:City) => void
-    goto: (page: string) => void
+    goto?: (page: string) => void
 }
 interface _Props extends Props {
     refInstance?: Ref<any>
@@ -22,6 +23,12 @@ const Index = (prop: _Props) => {
     }
     useImperativeHandle(refInstance, () => ({ refresh }));
 
+    useEffect(() => {
+        NavigatorController.Instance().cycle((act, from, to, parm) => {
+            console.log(act, from, to, parm);
+        });
+    }, [])
+
 
     return <div className={`list-container ${className || ''}`}>
         <div className="bg">
@@ -35,7 +42,7 @@ const Index = (prop: _Props) => {
                     <input />
                     <div onClick={() => { 
                         // if (goto) goto('List')
-                        NavigatorController.Instance().pop();
+                        NavigatorController.Instance().pop(null, 'search-view');
                         }}>取消</div>
                 </div>
             </div>

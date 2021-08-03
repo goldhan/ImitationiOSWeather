@@ -10,7 +10,7 @@ import 'swiper/swiper.scss';
 import './index.scss';
 interface Props {
     className?: string,
-    goto: (page: string) => void
+    goto?: (page: string) => void
 }
 interface _Props extends Props  {
     refInstance?: Ref<any>
@@ -23,6 +23,9 @@ const Index = (prop: _Props ) => {
     const [swiper, setSwiper] = useState<SwiperClass | null>(null);
     useEffect(() => {
     //    refresh();
+        NavigatorController.Instance().cycle((act, from , to, parm) => {
+            console.log(act, from, to, parm);
+        });
     }, []);
     const refresh = () => {
         CityManager.getCitys().then((citys) => setCitys(citys));

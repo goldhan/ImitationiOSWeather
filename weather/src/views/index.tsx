@@ -1,16 +1,19 @@
-import React, { useEffect, useState, useRef, MutableRefObject } from "react";
+import React, { useEffect, useState, useRef, ReactElement } from "react";
 import Main from './main';
 import List from './list';
 import Search from './search';
 
 import './index.scss';
 
+type actionFunc = (action: string, from?: string, to?: string, parm?: any) => void
 
 let nav: NavigatorController;
 export class NavigatorController {
     views: string[]
+    cycleFuncs: actionFunc[]
     constructor() {
         this.views = [];
+        this.cycleFuncs = [];
     }
 
     static Instance = () => {
@@ -19,85 +22,90 @@ export class NavigatorController {
         return nav;
     }
 
-    setRootView = (className:string) => {
-        this.views = [className];
+    setRootView = (className?: string) => {
+        if (className) {
+            this.views = [className];
+            return
+        }
+        this.views = [this.getRootView()];
     }
 
-    push = (to: string, from?: string, parm?:any) => {
+    cycle = (func: actionFunc) => {
+        // this.cycleFuncs.push(func);
+    }
+
+    push = (to: string, from?: string, parm?: any) => {
+        if (this.views.length == 0) this.setRootView();
         const toDom = document.getElementsByClassName(to)[0] as HTMLElement;
-        const fromDom = document.getElementsByClassName(from || this.views[this.views.length - 1])[0] as HTMLElement;
+        if (from && this.views[this.views.length - 1] !== from) {
+            this.views.push(from);
+        }
+        from = from || this.views[this.views.length - 1];
+        const fromDom = document.getElementsByClassName(from)[0] as HTMLElement;
         toDom.style.top = '0';
         toDom.style.zIndex = '1';
         fromDom.style.zIndex = '0';
         this.views.push(to);
+        this.cycleFuncs.forEach((act) => {
+            act('push', from, to, parm);
+        })
     }
 
-    pop = (parm?:any, from?:string) => {
-        if (this.views.length <= 1) return;
-        const fromDom = document.getElementsByClassName(from || this.views[this.views.length - 1])[0] as HTMLElement;
+    pop = (parm?: any, from?: string) => {
+        if (this.views.length === 0) {
+            this.setRootView();
+        }
+        if (from && this.views[this.views.length - 1] !== from) {
+            this.views.push(from);
+        }
+        if (this.views.length === 1) return;
+        from = from || this.views[this.views.length - 1];
+        const fromDom = document.getElementsByClassName(from)[0] as HTMLElement;
         fromDom.style.top = '100%';
         fromDom.style.zIndex = '0';
         this.views.pop();
+        this.cycleFuncs.forEach((act) => {
+            act('pop', from, this.views[this.views.length - 1], parm);
+        })
+    }
+
+    getRootView = ():string => {
+        return document.getElementsByClassName('nav')[0].children[0].className;
+    }
+ 
+    createNavigatorController = (views: ReactElement[]) => {
+        this.views = [];
+        return <div className="container nav">
+            {views.map((item, index) => {
+                if (index === 0) {
+                    this.setRootView(item.props.className || '')
+                }
+                return item;
+            })}
+        </div>
     }
 
 }
 
 interface RefInterface {
-    refresh:()=>void
+    refresh: () => void
 }
 const Index = () => {
     const main = useRef<RefInterface | null>(null);
     const list = useRef<RefInterface | null>(null);
-    const nowDisplay = useRef('main-view');
     useEffect(() => {
-        NavigatorController.Instance().setRootView('main-view');
         if (main.current) {
             main.current.refresh();
         }
     }, [])
 
-    const goto = (page:string) => {
-        const _goto = (className:string) => {
-            const to = document.getElementsByClassName(className)[0] as HTMLElement;
-            const now = document.getElementsByClassName(nowDisplay.current)[0] as HTMLElement;
-            to.style.top = '0';
-            to.style.zIndex = '1';
-            now.style.zIndex = '0';
-            now.style.top = '100%';
-            if (className === 'list-view' || className === 'search-view') {
-                
-            }
-            nowDisplay.current = className;
-        }
-        switch (page) {
-            case 'Main':
-                _goto('main-view');
-                // if (main.current) main.current.refresh();
-                break;
-            case 'List':
-                _goto('list-view');
-                if (list.current) list.current.refresh();
-                break;
-            case 'Search':
-                _goto('search-view');
-                // if (list.current) list.current.refresh();
-                break;
-            default:
-                break;
-        }
-    }
-
-
-
-
-
-    return <div className="container">
-        <div className="main-view"><Main goto={goto} ref={main} /></div>
-        <div className="list-view"><List goto={goto} ref={list} onClick={(city) => {
+    return NavigatorController.Instance().createNavigatorController([
+        <div className="main-view" key="main-view"><Main ref={main} /></div>,
+        <div className="list-view" key="list-view"><List ref={list} onClick={(city) => {
             // goto('Main');
-        }}/></div>
-        <div className="search-view"><Search goto={goto} ref={list} /></div>
-    </div>
+        }} /></div>,
+        <div className="search-view" key="search-view"><Search ref={list} /></div>
+    ])
 }
 
 export default Index;

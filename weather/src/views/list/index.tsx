@@ -7,7 +7,7 @@ import './index.scss';
 interface Props {
     className?: string,
     onClick?:(City:City) => void
-    goto: (page: string) => void
+    goto?: (page: string) => void
 }
 interface _Props extends Props {
     refInstance?: Ref<any>
@@ -19,6 +19,10 @@ const Index = (prop: _Props) => {
     const [citys, setCitys] = useState<City[]>([]);
     useEffect(() => {
         refresh();
+        // NavigatorController.Instance().push('search-view');
+        NavigatorController.Instance().cycle((act, from, to, parm) => {
+            console.log(act, from, to, parm);
+        });
     }, [])
     const refresh = () => {
         CityManager.getCitys().then((citys) => setCitys(citys));
@@ -35,7 +39,7 @@ const Index = (prop: _Props) => {
                 const key = `city-key-${index}`;
                 return <div key={key} className="item"  onClick={() => {
                     if (onClick) onClick(item)
-                    NavigatorController.Instance().pop();
+                    NavigatorController.Instance().pop(null, 'list-view');
                     }}>
                     <img className="item-bg" src="https://images.unsplash.com/photo-1534088568595-a066f410bcda?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=989&q=80" alt="" />
                     <div className="item-content-wrapped">
@@ -57,7 +61,7 @@ const Index = (prop: _Props) => {
                 </div>
                 <div onClick={() => {
                     // if (goto) goto('Search');
-                    NavigatorController.Instance().push('search-view');
+                    NavigatorController.Instance().push('search-view', 'list-view');
             }} ><img alt="add" src={Add} /></div>
             </div>
         </div>
