@@ -34,7 +34,7 @@ const Index = (prop: _Props) => {
             setIsGetCityFail(true);
             NavigatorController.Instance().push('search-view');
         });
-        // setIsGetCityFail(true);
+        setIsGetCityFail(true);
     }
     const slideTo = (index: number) => {
         if (swiper) {
@@ -98,12 +98,11 @@ const Index = (prop: _Props) => {
                 </div>
             </div>
         </React.Fragment> : <div className="status">
-            Loading......
             {isGetCityFail ? <div onClick={() => {
                 NavigatorController.Instance().push('search-view');
             }}>
                 获取定位失败，点击搜索城市
-            </div> : null}
+                </div> : "Loading......"}
         </div>}
 
     </div>
