@@ -117,7 +117,7 @@ const Index = (prop: _Props) => {
                                             <span className="time">{time[item.tz] || '--'}</span>
                                             <span className="city-name">
                                                 {item.cityName}
-                                                <span>{`${item.adm2}`}</span>
+                                                <span>{`${item.adm2 === item.cityName ? item.adm1 : item.adm2}`}</span>
                                             </span>
                                         </div>
                                         <div>

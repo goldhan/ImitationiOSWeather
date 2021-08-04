@@ -106,6 +106,9 @@
             >span {
                 padding: 0 16px;
                 color: rgba($color: #FFFFFF, $alpha: 0.35);
+                .red {
+                    color: white;
+                }
             }
 
         }

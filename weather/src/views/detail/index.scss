@@ -12,6 +12,9 @@
         .head {
             &-location {
                 font-size: 30px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
             }
 
             &-status {

@@ -28,7 +28,7 @@ const Index = (prop: _Props) => {
             if (resp.code === '200' && resp.location && resp.location.length) {
                 const r: City[] = resp.location.map((item: any, index: number) => {
                     const { name, id, tz, utcOffset, adm1, adm2, country } = item;
-                    return { cityName: name, cityId: id, isNear: false, index, html: red(value, name), tz, utcOffset, adm1, adm2, country };
+                    return { cityName: name, cityId: id, isNear: false, index, tz, utcOffset, adm1, adm2, country };
                 })
                 setCitys(r);
             } else {
@@ -107,7 +107,7 @@ const Index = (prop: _Props) => {
                 </div>
                 {citys.map((item:any, index) => {
                     const key = `r-${index}`;
-                    const { adm1, adm2, country } = item;
+                    const { adm1, adm2, country, cityName } = item;
                     return <div className="result-item" key={key} onClick={() => {
                         CityManager.addCity(item);
                         if (onClick) onClick(item);
@@ -116,8 +116,8 @@ const Index = (prop: _Props) => {
                         NavigatorController.Instance().pop(null, 'search-view');
                         
                     }}>
-                        <p dangerouslySetInnerHTML={{ __html: item.html }} />
-                        <span>{`${country} ${adm1} ${adm2}`}</span>
+                        <p dangerouslySetInnerHTML={{ __html: red(searchText, cityName) }} />
+                        <span dangerouslySetInnerHTML={{ __html: red(searchText, `${country} ${adm1} ${adm2}`) }} />
                     </div>
                 })}
             </div>

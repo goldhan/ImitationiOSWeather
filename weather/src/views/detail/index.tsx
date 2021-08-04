@@ -3,7 +3,7 @@ import tempCache, { CityTemp } from "../../utils/tempCache";
 import { City } from "../../utils/cityManager";
 import './index.scss';
 
-const HFICONURL = "https://raw.githubusercontent.com/qwd/WeatherIcon/master/weather-icon-S2/64"; // /105.png
+const HFICONURL = "https://gitee.com/goldhan/WeatherIcon/raw/master/weather-icon-S2/64"; // /105.png
 
 interface Props {
     city: City,
@@ -161,9 +161,13 @@ const Index = (prop: Props) => {
     const { base, detail, days, hours } = data;
     const todayData = days && days[0] ? days[0] : base;
     const isF = unit === 'F';
+    let cityName = `${city.adm2 || ''}${city.cityName || '--'}`;
+    if (city.cityName === city.adm2) {
+        cityName = city.cityName || '--';
+    }
     return <div className={`detail-container index-${index}`}>
         <div className={`container-head index-${index}`}>
-            <p className="head-location">{`${city.adm2 || ''}${city.cityName || '--'}`}</p>
+            <p className="head-location">{cityName}</p>
             <p className="head-status">{base.text || '--'}</p>
             <p className={`head-temperature index-${index}`}>{isF ? (base.tempF || '--'): (base.temp || '--')}°</p>
         </div>

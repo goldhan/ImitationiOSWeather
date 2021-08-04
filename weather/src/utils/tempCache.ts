@@ -115,6 +115,7 @@ class TempCache {
                 r = cloudy;
                 break;
             case 104:
+            case 154:
                 r = overcast;
                 break;
             case 300:
