@@ -83,9 +83,9 @@ const Index = (prop: _Props) => {
     }
 
     return <div className={`search-container ${className || ''}`}>
-        <div className="bg">
+        {/* <div className="bg">
             <img alt="bg" src="https://images.unsplash.com/photo-1567266565446-d9c40ccf59a4?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" />
-        </div>
+        </div> */}
         <div className="content">
             <div className="head">
                 <span>输入城市、邮政编码或机场位置</span>

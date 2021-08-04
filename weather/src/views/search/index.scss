@@ -2,9 +2,12 @@
     position: absolute;
     height: 100%;
     width: 100%;
-    background: black;
+    // background: black;
     color: white;
     overflow: auto;
+
+    backdrop-filter: saturate(180%) blur(20px);
+    background-color: rgba(0, 0, 0, 0.5);
 
     .bg {
         width: 100%;
@@ -44,7 +47,7 @@
             flex-direction: column;
             text-align: center;
             backdrop-filter: saturate(180%) blur(20px);
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.02);
 
             >span {
                 font-size: 12px;

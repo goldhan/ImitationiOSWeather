@@ -27,6 +27,7 @@ const Index = (prop: _Props) => {
     const [citys, setCitys] = useState<CityTemp[]>([]);
     const [time, setTime] = useState<{ [key: string]: string }>({});
     const [unit, setUnit] = useState<'C' | 'F'>(tempCache.getTempUnit());
+    const [bg, setBg] = useState('');
     const timer = useRef<number>();
     useEffect(() => {
         refresh();
@@ -45,6 +46,10 @@ const Index = (prop: _Props) => {
     useEffect(() => {
         getTime(citys);
         startTimer();
+        if (citys.length) {
+            const index =  Math.floor(Math.random() * citys.length);	
+            setBg(citys[index].base.bg);
+        }
     }, [citys])
 
     const refresh = () => {
@@ -52,8 +57,6 @@ const Index = (prop: _Props) => {
         CityManager.getCitys().then((citys) => {
             tempCache.getDataWithCitys(citys, true).then((r) => {
                 setCitys(r);
-                // getTime(r);
-                // startTimer();
             })
         });
         setUnit(tempCache.getTempUnit());
@@ -87,11 +90,10 @@ const Index = (prop: _Props) => {
     }
 
     useImperativeHandle(refInstance, () => ({ refresh }));
-
     const isF = unit === 'F';
     return <div className={`list-container ${className || ''}`}>
         <div className="bg">
-            <img alt="bg" src="https://images.unsplash.com/photo-1567266565446-d9c40ccf59a4?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" />
+            <img alt="bg" src={bg} />
         </div>
         <div className="content">
             {citys.map((item, index) => {
