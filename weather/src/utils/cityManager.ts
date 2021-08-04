@@ -8,6 +8,8 @@ export interface City {
     cityId: string
     index: number
     isNear: boolean
+    utcOffset: string,
+    tz:string
 }
 
 class CityManager {
@@ -26,6 +28,11 @@ class CityManager {
     addCity = (city: City) => {
         const filter = this.citys.filter((item) => item.cityId !== city.cityId);
         this.citys = [...filter, { ...city, index: filter.length }];
+        storage.set('citys', { data: this.citys });
+    }
+
+    delCity = (city: City) => {
+        this.citys = this.citys.filter((item) => item.cityId !== city.cityId);
         storage.set('citys', { data: this.citys });
     }
 
@@ -88,8 +95,8 @@ class CityManager {
         const { latitude, longitude } = loc;
         return net.getWithApi('/city/lookup', { location: `${longitude},${latitude}` }, true).then((resp) => {
             if (resp.code === '200' && resp.location && resp.location.length) {
-                const { name, id } = resp.location[0];
-                return { cityName: name, cityId: id, isNear: true, index: 0 };
+                const { name, id, tz, utcOffset } = resp.location[0];
+                return { cityName: name, cityId: id, isNear: true, index: 0, tz, utcOffset};
             } else {
                 return null
             }

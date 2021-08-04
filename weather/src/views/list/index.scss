@@ -25,7 +25,7 @@
             top: 0;
             content: '';
             background: rgba($color: #000000, $alpha: 0.5);
-            
+
         }
     }
 
@@ -35,64 +35,148 @@
         position: absolute;
         top: 0;
         left: 0;
+        overflow: auto;
 
         .item {
-            overflow: hidden;
             position: relative;
-            height: 80px;
 
-            .item-bg {
-                position: absolute;
+
+            .item-scroll {
+                overflow-x: scroll;
+
+                height: 80px;
                 width: 100%;
-                overflow: hidden;
 
-                img {
-                    width: 100%;
+                .item-wrapped {
+                    display: flex;
+                    width: calc(100% + 60px);
+                    height: 100%;
+
+
+                    .item-left {
+                        height: 100%;
+                        width: calc(100% - 60px);
+                        display: inline-table;
+                        position: relative;
+
+                        .item-bg {
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            overflow: hidden;
+
+                            img {
+                                width: 100%;
+                                overflow: hidden;
+
+
+                            }
+                        }
+
+                        .item-content-wrapped {
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            top: 0;
+
+                            .item-content {
+                                padding: 0 16px;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                height: 100%;
+
+                                >div {
+                                    display: flex;
+                                    flex-direction: column;
+
+                                    .time {
+                                        font-size: 14px;
+                                    }
+
+                                    .city-name {
+                                        font-size: 30px;
+                                    }
+
+                                    .temp {
+                                        font-size: 55px;
+                                        font-weight: lighter;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
+                    .item-right {
+                        display: inline-table;
+                        height: 100%;
+                        width: 60px;
+                    }
+
                 }
             }
 
-            .item-content-wrapped {
-                position: absolute;
-                width: 100%;
+
+            .item-del {
+                background: #FF4848;
                 height: 100%;
+                width: 60px;
+                position: absolute;
+                right: 0px;
                 top: 0;
-                
-                .item-content {
-                    padding: 0 16px;
+
+                p {
                     display: flex;
-                    justify-content: space-between;
                     align-items: center;
+                    justify-content: center;
                     height: 100%;
-                      >div {
-                          display: flex;
-                          flex-direction: column;
-
-                          .time {
-                              font-size: 14px;
-                          }
-
-                          .city-name {
-                              font-size: 30px;
-                          }
-
-                          .temp {
-                              font-size: 55px;
-                              font-weight: lighter;
-                          }
-                      }
+                    text-align: center;
                 }
-              
             }
         }
 
         .set {
             display: flex;
-            padding: 8px 16px;
+            padding: 16px;
             align-items: center;
             justify-content: space-between;
+            font-weight: 300;
+            color: rgba($color: #ffffff, $alpha: 0.45);
+
+            .temp-unit {
+
+                >span {
+                    padding-right: 4px;
+
+                }
+
+                span:last-child {
+                    padding-left: 4px;
+                }
+
+                .active {
+                    color: white
+                }
+            }
+
             >div {
                 display: flex;
                 align-items: center;
+            }
+
+            img {
+                opacity: 0.45;
+            }
+        }
+
+        .support {
+            padding-top: 32px;
+            text-align: center;
+
+            img {
+                opacity: 0.35;
             }
         }
     }

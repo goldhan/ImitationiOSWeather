@@ -21,22 +21,20 @@ const Index = (prop: _Props) => {
     const { className, goto, refInstance, onClick } = prop;
     const [citys, setCitys] = useState<City[]>([]);
     const [searchText, setSearchText] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const search_ = (value: string) => {
-
         net.getWithApi('/city/lookup', { location: value }, true).then((resp) => {
             if (resp.code === '200' && resp.location && resp.location.length) {
                 const r: City[] = resp.location.map((item: any, index: number) => {
-                    const { name, id } = item;
-                    return { cityName: name, cityId: id, isNear: false, index, html: red(value, name) };
+                    const { name, id, tz, utcOffset } = item;
+                    return { cityName: name, cityId: id, isNear: false, index, html: red(value, name), tz, utcOffset };
                 })
                 setCitys(r);
             } else {
-                return null
+                setCitys([]);
             }
-
-        });
-
+        }).finally(() => setIsLoading(false));
     }
 
     const search = useRef(Tools.debounce(search_, 500, {}));
@@ -53,6 +51,7 @@ const Index = (prop: _Props) => {
         value = value.trim();
         setSearchText(value);
         if (value.length > 1) {
+            setIsLoading(true);
             search.current(value);
         } else {
             setCitys([]);
@@ -75,9 +74,16 @@ const Index = (prop: _Props) => {
         return sourceValue;
     }
 
-
-
-
+    let tip = '';
+    if (searchText.length === 1) {
+        tip = '输入字符过少';
+    }
+    if (searchText.length >= 2 && citys.length === 0 && !isLoading ) {
+        tip = '无记录';
+    }
+    if (isLoading) {
+        tip = '正在验证中';
+    }
 
     return <div className={`search-container ${className || ''}`}>
         <div className="bg">
@@ -99,9 +105,9 @@ const Index = (prop: _Props) => {
                 </div>
             </div>
             <div className="result">
-                {citys.length === 0 && searchText.length ? <div className="result-item">
-                    <p>{searchText.length == 1 ? '输入字符过少' : '正在验证城市'}</p>
-                </div> : null}
+                <div className="result-item">
+                    <p>{tip}</p>
+                </div>
                 {citys.map((item:any, index) => {
                     const key = `r-${index}`;
                     return <div className="result-item" key={key} onClick={() => {

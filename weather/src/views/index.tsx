@@ -98,7 +98,12 @@ const Index = () => {
         <div className="main-view" key="main-view"><Main ref={main} /></div>,
         <div className="list-view" key="list-view"><List ref={list} onClick={(city) => {
             if (main.current) {
+                main.current.refresh();
                 main.current.slideTo(city.index);
+            }
+        }} delHandle={(city) => {
+            if (main.current) {
+                main.current.refresh();
             }
         }} /></div>,
         <div className="search-view" key="search-view"><Search onClick={(city) => {

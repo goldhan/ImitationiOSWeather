@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useImperativeHandle, Ref, forwardRef } from "react";
 import Detail from '../detail';
 import CityManager, { City } from "../../utils/cityManager";
+import tempCache from "../../utils/tempCache";
 import { NavigatorController } from "..";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperClass from 'swiper/types/swiper-class';
@@ -22,6 +23,7 @@ const Index = (prop: _Props) => {
     const [selected, setSelected] = useState(0);
     const [swiper, setSwiper] = useState<SwiperClass | null>(null);
     const [isGetCityFail, setIsGetCityFail] = useState(false);
+    const [unit, setUnit] = useState<'C'|'F'>(tempCache.getTempUnit());
     useEffect(() => {
         //    refresh();
         NavigatorController.Instance().cycle((act, from, to, parm) => {
@@ -34,7 +36,7 @@ const Index = (prop: _Props) => {
             setIsGetCityFail(true);
             NavigatorController.Instance().push('search-view');
         });
-        setIsGetCityFail(true);
+        setUnit(tempCache.getTempUnit());
     }
     const slideTo = (index: number) => {
         if (swiper) {
@@ -57,14 +59,14 @@ const Index = (prop: _Props) => {
                 >
                     {citys.map((item, index) => {
                         const key = `detail-key-${index}`;
-                        const { cityId, cityName, isNear } = item;
-                        return <SwiperSlide key={key}><Detail cityId={cityId} cityName={cityName} index={index} isNear={isNear} /></SwiperSlide>
+                        // const { cityId, cityName, isNear } = item;
+                        return <SwiperSlide key={key}><Detail city={item} unit={unit}/></SwiperSlide>
                     })}
                 </Swiper>
             </div>
             <div className="bottom">
                 <div>
-                    <div className="support">
+                    <div className="support" onClick={() => window.open("https://dev.qweather.com/")}>
                         <img alt="hefeng" src="https://www.qweather.com/favicon-32x32.png?v=2021010553" />
                     </div>
                     <div className="page">
@@ -90,7 +92,6 @@ const Index = (prop: _Props) => {
                         }} />
                     </div>
                     <div className="menu" onClick={() => {
-                        // if (goto) goto('List')
                         NavigatorController.Instance().push('list-view');
                     }}>
                         <img alt="list" src={listIcon} />
@@ -101,8 +102,8 @@ const Index = (prop: _Props) => {
             {isGetCityFail ? <div onClick={() => {
                 NavigatorController.Instance().push('search-view');
             }}>
-                获取定位失败，点击搜索城市
-                </div> : "Loading......"}
+                {isGetCityFail ? '获取定位失败，点击搜索城市' : ''}
+            </div> : "Loading......"}
         </div>}
 
     </div>
