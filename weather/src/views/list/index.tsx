@@ -76,7 +76,7 @@ const Index = (prop: _Props) => {
                                 if (onClick) onClick(item)
                                 NavigatorController.Instance().pop(null, 'list-view');
                             }}>
-                                <img className="item-bg" src="https://images.unsplash.com/photo-1534088568595-a066f410bcda?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=989&q=80" alt="" />
+                                <img className="item-bg" src={item.base.bg} alt="" />
                                 <div className="item-content-wrapped">
                                     <div className="item-content">
                                         <div>
