@@ -97,11 +97,15 @@
            
             font-size: 14px;
             p {
-                padding: 8px 16px;
+                padding: 8px 16px 0;
                 color: rgba($color: #FFFFFF, $alpha: 0.35);
                 .red {
                     color: white;
                 }
+            }
+            >span {
+                padding: 0 16px;
+                color: rgba($color: #FFFFFF, $alpha: 0.35);
             }
 
         }

@@ -10,6 +10,9 @@ export interface City {
     isNear: boolean
     utcOffset: string,
     tz:string
+    adm1:string
+    adm2:string
+    country:string
 }
 
 class CityManager {
@@ -95,8 +98,8 @@ class CityManager {
         const { latitude, longitude } = loc;
         return net.getWithApi('/city/lookup', { location: `${longitude},${latitude}` }, true).then((resp) => {
             if (resp.code === '200' && resp.location && resp.location.length) {
-                const { name, id, tz, utcOffset } = resp.location[0];
-                return { cityName: name, cityId: id, isNear: true, index: 0, tz, utcOffset};
+                const { name, id, tz, utcOffset, adm1, adm2, country } = resp.location[0];
+                return { cityName: name, cityId: id, isNear: true, index: 0, tz, utcOffset, adm1, adm2, country};
             } else {
                 return null
             }

@@ -27,8 +27,8 @@ const Index = (prop: _Props) => {
         net.getWithApi('/city/lookup', { location: value }, true).then((resp) => {
             if (resp.code === '200' && resp.location && resp.location.length) {
                 const r: City[] = resp.location.map((item: any, index: number) => {
-                    const { name, id, tz, utcOffset } = item;
-                    return { cityName: name, cityId: id, isNear: false, index, html: red(value, name), tz, utcOffset };
+                    const { name, id, tz, utcOffset, adm1, adm2, country } = item;
+                    return { cityName: name, cityId: id, isNear: false, index, html: red(value, name), tz, utcOffset, adm1, adm2, country };
                 })
                 setCitys(r);
             } else {
@@ -40,9 +40,6 @@ const Index = (prop: _Props) => {
     const search = useRef(Tools.debounce(search_, 500, {}));
 
     useEffect(() => {
-        NavigatorController.Instance().cycle((act, from, to, parm) => {
-            console.log(act, from, to, parm);
-        });
     }, [])
 
 
@@ -110,6 +107,7 @@ const Index = (prop: _Props) => {
                 </div>
                 {citys.map((item:any, index) => {
                     const key = `r-${index}`;
+                    const { adm1, adm2, country } = item;
                     return <div className="result-item" key={key} onClick={() => {
                         CityManager.addCity(item);
                         if (onClick) onClick(item);
@@ -119,6 +117,7 @@ const Index = (prop: _Props) => {
                         
                     }}>
                         <p dangerouslySetInnerHTML={{ __html: item.html }} />
+                        <span>{`${country} ${adm1} ${adm2}`}</span>
                     </div>
                 })}
             </div>

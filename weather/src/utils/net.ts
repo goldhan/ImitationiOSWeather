@@ -36,9 +36,9 @@ class Net {
     } 
 
     get = (url:string):Promise<any> => {
-        gkLog.log('req: ', url);
+        gkLog.log('↑',url);
         return axios.get(url, {timeout: 60000}).then((r) => {
-            gkLog.log('rep: ', url, '\n', r.data);
+            gkLog.log('↓', url, '\n', r.data);
             return r.data;
         }).catch((err) => {
             if (err) {

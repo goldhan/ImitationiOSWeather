@@ -8,12 +8,17 @@ import './index.scss';
 type actionFunc = (action: string, from?: string, to?: string, parm?: any) => void
 
 let nav: NavigatorController;
+
+export const useNavigatorCycle = (func: actionFunc, name:string) => {
+    NavigatorController.Instance().cycle(name, func);
+}
+
 export class NavigatorController {
     views: string[]
-    cycleFuncs: actionFunc[]
+    cycleFuncs: {[key:string]: actionFunc}
     constructor() {
         this.views = [];
-        this.cycleFuncs = [];
+        this.cycleFuncs = {};
     }
 
     static Instance = () => {
@@ -30,8 +35,8 @@ export class NavigatorController {
         this.views = [this.getRootView()];
     }
 
-    cycle = (func: actionFunc) => {
-        // this.cycleFuncs.push(func);
+    cycle = (from:string,func: actionFunc) => {
+        this.cycleFuncs[from] = func;
     }
 
     push = (to: string, from?: string, parm?: any) => {
@@ -46,9 +51,12 @@ export class NavigatorController {
         toDom.style.zIndex = '1';
         fromDom.style.zIndex = '0';
         this.views.push(to);
-        this.cycleFuncs.forEach((act) => {
-            act('push', from, to, parm);
-        })
+        for (const key in this.cycleFuncs) {
+            if (Object.prototype.hasOwnProperty.call(this.cycleFuncs, key)) {
+                const act = this.cycleFuncs[key];
+                act('push', from, to, parm);
+            }
+        }
     }
 
     pop = (parm?: any, from?: string) => {
@@ -64,9 +72,12 @@ export class NavigatorController {
         fromDom.style.top = '100%';
         fromDom.style.zIndex = '0';
         this.views.pop();
-        this.cycleFuncs.forEach((act) => {
-            act('pop', from, this.views[this.views.length - 1], parm);
-        })
+        for (const key in this.cycleFuncs) {
+            if (Object.prototype.hasOwnProperty.call(this.cycleFuncs, key)) {
+                const act = this.cycleFuncs[key];
+                act('pop', from, this.views[this.views.length - 1], parm);
+            }
+        }
     }
 
     getRootView = (): string => {

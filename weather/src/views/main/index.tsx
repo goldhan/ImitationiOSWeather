@@ -27,9 +27,6 @@ const Index = (prop: _Props) => {
     const [bgs, setBgs] = useState<{[key:string]:string}>({});
     useEffect(() => {
         //    refresh();
-        NavigatorController.Instance().cycle((act, from, to, parm) => {
-            console.log(act, from, to, parm);
-        });
     }, []);
     const refresh = () => {
         CityManager.getCitys().then((citys) => {
@@ -68,7 +65,9 @@ const Index = (prop: _Props) => {
                             setBgs((old) => {
                                 const n = {...old};
                                 n[cityTemp.cityId] = cityTemp.base.bg;
-                                console.log(cityTemp.cityName, cityTemp.base.bg, cityTemp.base.icon);
+                               if (!n[cityTemp.cityId]) {
+                                   console.log(cityTemp.base.icon, '没有背景')
+                               }
                                 return n;
                             })
 

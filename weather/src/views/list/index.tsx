@@ -1,5 +1,5 @@
-import React, { useState, useImperativeHandle, Ref, forwardRef, useEffect } from 'react';
-import { NavigatorController } from "..";
+import React, { useState, useImperativeHandle, Ref, forwardRef, useEffect, useCallback, useRef } from 'react';
+import { NavigatorController, useNavigatorCycle } from "..";
 import CityManager, { City } from "../../utils/cityManager";
 import tempCache, { CityTemp } from "../../utils/tempCache";
 import Add from '../../res/add_circle_outline_white_24dp.svg';
@@ -22,34 +22,68 @@ interface _Props extends Props {
     refInstance?: Ref<any>
 }
 
-
 const Index = (prop: _Props) => {
     const { className, delHandle, refInstance, onClick } = prop;
     const [citys, setCitys] = useState<CityTemp[]>([]);
     const [time, setTime] = useState<{ [key: string]: string }>({});
     const [unit, setUnit] = useState<'C' | 'F'>(tempCache.getTempUnit());
+    const timer = useRef<number>();
     useEffect(() => {
         refresh();
-        // NavigatorController.Instance().push('search-view');
-        NavigatorController.Instance().cycle((act, from, to, parm) => {
-            // console.log(act, from, to, parm);
-            if (act === 'pop' && from === 'search-list' && parm) {
-
-            }
-        });
     }, [])
+
+    useNavigatorCycle((act, from, to, parm) => {
+        if (to === 'list-view') {
+            startTimer();
+        }
+        if (from === 'list-view') {
+            stopTimer();
+        }
+        // console.log(citys)
+    }, 'list-view');
+    
+    useEffect(() => {
+        getTime(citys);
+        startTimer();
+    }, [citys])
+
     const refresh = () => {
+
         CityManager.getCitys().then((citys) => {
-            tempCache.getDataWithCitys(citys, true).then((r) => setCitys(r));
-            const time_: { [key: string]: string } = {};
-            citys.forEach((item, index) => {
-                if (!time_[item.tz]) {
-                    time_[item.tz] = dayjs().tz(item.tz).format('HH:mm');
-                }
+            tempCache.getDataWithCitys(citys, true).then((r) => {
+                setCitys(r);
+                // getTime(r);
+                // startTimer();
             })
-            setTime(time_);
         });
         setUnit(tempCache.getTempUnit());
+
+    }
+
+    const getTime = (citys:CityTemp[]) => {
+        const time_: { [key: string]: string } = {};
+        citys.forEach((item, index) => {
+            if (!time_[item.tz]) {
+                time_[item.tz] = dayjs().tz(item.tz).format('HH:mm');
+            }
+        })
+        setTime(time_);
+    }
+
+    const stopTimer = () => {
+        if (timer.current) {
+            clearInterval(timer.current)
+            console.log('stop timer', timer.current);
+            timer.current = undefined;
+        }
+    }
+
+    const startTimer = () => {
+        stopTimer();
+        timer.current = setInterval(() => {
+            getTime(citys);
+        }, 3000)
+        console.log('start timer',timer.current);
     }
 
     useImperativeHandle(refInstance, () => ({ refresh }));
@@ -81,7 +115,10 @@ const Index = (prop: _Props) => {
                                     <div className="item-content">
                                         <div>
                                             <span className="time">{time[item.tz] || '--'}</span>
-                                            <span className="city-name">{item.cityName}</span>
+                                            <span className="city-name">
+                                                {item.cityName}
+                                                <span>{`${item.adm2}`}</span>
+                                            </span>
                                         </div>
                                         <div>
                                             <div className="temp">{isF ? item.base.tempF : item.base.temp}°</div>

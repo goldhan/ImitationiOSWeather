@@ -1,6 +1,7 @@
+import dayjs from 'dayjs';
 class GKLog {
   log_ (text: string, obj: any) {
-    console.log(`** ${text} ${new Date()} ****`)
+    console.log(`** ${text} ${dayjs().format('HH:mm:ss')} ****`)
     console.log(...obj)
   }
 

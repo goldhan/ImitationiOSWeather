@@ -163,7 +163,7 @@ const Index = (prop: Props) => {
     const isF = unit === 'F';
     return <div className={`detail-container index-${index}`}>
         <div className={`container-head index-${index}`}>
-            <p className="head-location">{city.cityName || '--'}</p>
+            <p className="head-location">{`${city.adm2 || ''}${city.cityName || '--'}`}</p>
             <p className="head-status">{base.text || '--'}</p>
             <p className={`head-temperature index-${index}`}>{isF ? (base.tempF || '--'): (base.temp || '--')}°</p>
         </div>

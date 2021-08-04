@@ -4,8 +4,9 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [reactRefresh()],
+  base: "/webtest/",
   server: {
-    host:'0.0.0.0',
+    host: '0.0.0.0',
     port: 5002,
     https: true
   }

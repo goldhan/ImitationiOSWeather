@@ -137,6 +137,7 @@ class TempCache {
             case 310:
             case 311:
             case 312:
+            case 350:
                 r = heavy_rain;
                 break;
             case 400:
@@ -216,7 +217,7 @@ class TempCache {
             }
             if (day && day.code === '200') {
                 r.days = day.daily.map((item: any) => {
-                    return { ...item, week: getWeek(item.fxTime), tempMinF: getTempF(item.tempMin), tempMaxF: getTempF(item.tempMax) }
+                    return { ...item, week: getWeek(item.fxDate), tempMinF: getTempF(item.tempMin), tempMaxF: getTempF(item.tempMax) }
                 });
                 // r.detail = day.daily[0];
             }
