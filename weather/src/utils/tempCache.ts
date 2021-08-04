@@ -1,7 +1,17 @@
 import net from './net';
 import dayjs from 'dayjs';
 import storage from './storage';
-import CityManager, { City } from './cityManager';
+import { City } from './cityManager';
+
+import cloudy from '../res/cloudy.jpg';
+import heavy_rain from '../res/heavy_rain.jpg';
+import light_rain_n from '../res/light_rain_n.jpg';
+import light_rain from '../res/light_rain.jpg';
+import snow_n from '../res/snow_n.jpg';
+import snow from '../res/snow.jpg';
+import sunny from '../res/sunny.jpg';
+import overcast from '../res/overcast.jpg';
+import thunder from '../res/thunder.jpg';
 
 let instance: TempCache;
 
@@ -30,6 +40,7 @@ interface BaseInfo {
     week: string
     hour: string
     iconDay: string
+    bg:string
 }
 
 const Hour = 1;
@@ -85,6 +96,70 @@ class TempCache {
             })
         }
         return new Promise((r) => r(t));
+    }
+
+    getBg = (code:string):string => {
+        const statu = parseInt(code, 10);
+        let r = '';
+        switch (statu) {
+            case 150:
+            case 153:
+            case 100:
+                r = sunny;
+                break;
+            case 101:
+            case 103:
+                r = cloudy;
+                break;
+            case 102:
+                r = cloudy;
+                break;
+            case 104:
+                r = overcast;
+                break;
+            case 300:
+            case 301:
+            case 302:
+            case 303:
+            case 304:
+                r = thunder;
+                break;
+            case 305:
+            case 309:
+                r = light_rain;
+                break;
+            case 306:
+            case 313:
+                r = heavy_rain;
+                break;
+            case 307:
+            case 308:
+            case 310:
+            case 311:
+            case 312:
+                r = heavy_rain;
+                break;
+            case 400:
+                r = snow;
+                break;
+            case 401:
+            case 407:
+                r = snow;
+                break;
+            case 402:
+            case 403:
+                r = snow;
+                break;
+            case 404:
+            case 405:
+            case 406:
+                r = snow;
+                break;
+            default:
+                r = ''
+                break;
+        }
+        return r;
     }
 
     getDataWithNet = (city: City): Promise<CityTemp> => {
@@ -164,6 +239,7 @@ class TempCache {
                 return { name: item[0], value };
             })
             const base = r.base;
+            r.base.bg = this.getBg(r.base.icon);
             r.desc = `今天：${base.text}，${base.windDir}${base.windSpeed}公里/小时。最高气温${base.tempMax || '--'}°，最低气温${base.tempMin || '--'}°`;
             r.descF = `今天：${base.text}，${base.windDir}${base.windSpeed}公里/小时。最高气温${base.tempMaxF || '--'}°，最低气温${base.tempMinF || '--'}°`;
             return r;

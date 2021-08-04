@@ -24,6 +24,7 @@ const Index = (prop: _Props) => {
     const [swiper, setSwiper] = useState<SwiperClass | null>(null);
     const [isGetCityFail, setIsGetCityFail] = useState(false);
     const [unit, setUnit] = useState<'C'|'F'>(tempCache.getTempUnit());
+    const [bgs, setBgs] = useState<{[key:string]:string}>({});
     useEffect(() => {
         //    refresh();
         NavigatorController.Instance().cycle((act, from, to, parm) => {
@@ -31,7 +32,9 @@ const Index = (prop: _Props) => {
         });
     }, []);
     const refresh = () => {
-        CityManager.getCitys().then((citys) => setCitys(citys)).catch((e) => {
+        CityManager.getCitys().then((citys) => {
+            setCitys(citys);
+        }).catch((e) => {
             // alert('获取定位失败');
             setIsGetCityFail(true);
             NavigatorController.Instance().push('search-view');
@@ -49,7 +52,8 @@ const Index = (prop: _Props) => {
     return <div className={`main-container ${className || ''}`}>
         {citys.length ? <React.Fragment>
             <div className="main-background">
-                <img src="https://images.unsplash.com/photo-1534088568595-a066f410bcda?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=989&q=80" alt="" />
+                <img src={bgs[citys[selected].cityId]} alt="" />
+                {/* <img src="https://images.unsplash.com/photo-1534088568595-a066f410bcda?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=989&q=80" alt="" /> */}
             </div>
             <div className="main">
                 <Swiper
@@ -60,7 +64,15 @@ const Index = (prop: _Props) => {
                     {citys.map((item, index) => {
                         const key = `detail-key-${index}`;
                         // const { cityId, cityName, isNear } = item;
-                        return <SwiperSlide key={key}><Detail city={item} unit={unit}/></SwiperSlide>
+                        return <SwiperSlide key={key}><Detail city={item} unit={unit} onLoaded={(cityTemp) => {
+                            setBgs((old) => {
+                                const n = {...old};
+                                n[cityTemp.cityId] = cityTemp.base.bg;
+                                console.log(cityTemp.cityName, cityTemp.base.bg, cityTemp.base.icon);
+                                return n;
+                            })
+
+                        }}/></SwiperSlide>
                     })}
                 </Swiper>
             </div>

@@ -8,10 +8,11 @@ const HFICONURL = "https://raw.githubusercontent.com/qwd/WeatherIcon/master/weat
 interface Props {
     city: City,
     unit: "C" | "F"
+    onLoaded?: (CityTemp: CityTemp) => void
 }
 
 const Index = (prop: Props) => {
-    const { city, unit } = prop;
+    const { city, unit, onLoaded } = prop;
     const index = city.index;
     const isFloat = useRef(false);
     const [data, setData] = useState<CityTemp>({
@@ -34,6 +35,7 @@ const Index = (prop: Props) => {
             week: '--',
             hour: '--',
             iconDay: '--',
+            bg:''
         },
         detail: [],
         days: [],
@@ -58,6 +60,7 @@ const Index = (prop: Props) => {
     const getData = (city: City) => {
         tempCache.getDataWithCity(city).then((r) => {
             setData(r);
+            if (onLoaded) onLoaded(r);
         })
     }
 
