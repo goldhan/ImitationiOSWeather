@@ -84,9 +84,15 @@
                                 >div {
                                     display: flex;
                                     flex-direction: column;
-
+                                   
                                     .time {
+                                        display: flex;
+                                        align-items: center;
                                         font-size: 14px;
+                                         .near {
+                                             width: 10px;
+                                             margin-left: 8px;
+                                         }
                                     }
 
                                     .city-name {

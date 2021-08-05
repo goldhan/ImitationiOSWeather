@@ -2,8 +2,9 @@ import React, { useState, useImperativeHandle, Ref, forwardRef, useEffect, useCa
 import { NavigatorController, useNavigatorCycle } from "..";
 import CityManager, { City } from "../../utils/cityManager";
 import tempCache, { CityTemp } from "../../utils/tempCache";
+import { useTranslation } from 'react-i18next';
 import Add from '../../res/add_circle_outline_white_24dp.svg';
-
+import nearIcon from '../../res/near_me_white_24dp.svg';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // dependent on utc plugin
 import timezone from 'dayjs/plugin/timezone';
@@ -28,6 +29,7 @@ const Index = (prop: _Props) => {
     const [time, setTime] = useState<{ [key: string]: string }>({});
     const [unit, setUnit] = useState<'C' | 'F'>(tempCache.getTempUnit());
     const [bg, setBg] = useState('');
+    const { t } = useTranslation();
     const timer = useRef<number>();
     useEffect(() => {
         // refresh();
@@ -105,9 +107,9 @@ const Index = (prop: _Props) => {
                         refresh();
                         if (delHandle) delHandle(item);
                     }}>
-                        <p>删除</p>
+                        <p>{t('del')}</p>
                     </div>
-                    <div className="item-scroll">
+                    <div className="item-scroll" style={{ overflowX: item.isNear ? 'hidden' : 'scroll'}}>
                         <div className="item-wrapped">
                             <div className="item-left" onClick={() => {
                                 if (onClick) onClick(item)
@@ -117,7 +119,10 @@ const Index = (prop: _Props) => {
                                 <div className="item-content-wrapped">
                                     <div className="item-content">
                                         <div>
-                                            <span className="time">{time[item.tz] || '--'}</span>
+                                            <span className="time">
+                                                {time[item.tz] || '--'}
+                                                {item.isNear ? <img className="near" src={nearIcon} alt="near" /> : null}
+                                            </span>
                                             <span className="city-name">
                                                 {item.cityName}
                                                 <span>{`${item.adm2 === item.cityName ? item.adm1 : item.adm2}`}</span>

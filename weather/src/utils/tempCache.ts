@@ -2,6 +2,7 @@ import net from './net';
 import dayjs from 'dayjs';
 import storage from './storage';
 import { City } from './cityManager';
+import i18n from '../locales/i18';
 
 import cloudy from '../res/cloudy.jpg';
 import heavy_rain from '../res/heavy_rain.jpg';
@@ -14,7 +15,6 @@ import overcast from '../res/overcast.jpg';
 import thunder from '../res/thunder.jpg';
 
 let instance: TempCache;
-
 export interface CityTemp extends City {
     base: BaseInfo
     detail: { name: string, value: string }[]
@@ -40,14 +40,14 @@ interface BaseInfo {
     week: string
     hour: string
     iconDay: string
-    bg:string
+    bg: string
 }
 
 const Hour = 1;
 const Expired = Hour * 60 * 1000;
 class TempCache {
     temp: { [key: string]: CityTemp }
-    unit: 'C'|'F'
+    unit: 'C' | 'F'
     static Instance = () => {
         if (instance) return instance;
         instance = new TempCache();
@@ -98,7 +98,7 @@ class TempCache {
         return new Promise((r) => r(t));
     }
 
-    getBg = (code:string):string => {
+    getBg = (code: string): string => {
         const statu = parseInt(code, 10);
         let r = '';
         switch (statu) {
@@ -164,31 +164,42 @@ class TempCache {
         return r;
     }
 
+    T = (str: string): string => {
+        return i18n.t(str);
+    }
+
     getDataWithNet = (city: City): Promise<CityTemp> => {
+        // "Mon.": "星期一",
+        // "Tues.": "星期二",
+        // "Wed.": "星期三",
+        // "Thur.": "星期四",
+        // "Fri.": "星期五",
+        // "Sat.": "星期六",
+        // "Sun.": "星期日"
         const getWeek = (date: string): string => {
             const str = dayjs(date).format('d');
-            const parm = ["天", "一", "二", "三", "四", "五", "六"]
+            const parm = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"]
             // if (date === dayjs().format("YYYY-MM-DD")) {
             //     return '今天';
             // }
-            return `星期${parm[parseInt(str, 10)]}`;
+            return `${this.T(`week.${parm[parseInt(str, 10)]}`)}`;
         }
 
-        const getTempF = (c:string):string => {
+        const getTempF = (c: string): string => {
             const t = 32 + parseFloat(c) * 1.8
             return `${t.toFixed(0)}`;
         }
         const detailInfoArr = [
-            ["日出", "sunrise"],
-            ["日落", "sunset"],
-            ["降水概率", ""],
-            ["湿度", "humidity"],
-            ["风速", "windSpeedDay"],
-            ["体感温度", ""],
-            ["降水量", "precip"],
-            ["气压", "pressure"],
-            ["能见度", "vis"],
-            ["紫外线指数", "uvIndex"],
+            [this.T('sunrise'), "sunrise"],
+            [this.T("sunset"), "sunset"],
+            [this.T("POP"), ""],
+            [this.T("humidity"), "humidity"],
+            [this.T("windSpeedDay"), "windSpeedDay"],
+            [this.T("apparentTemp"), ""],
+            [this.T("precip"), "precip"],
+            [this.T("pressure"), "pressure"],
+            [this.T("vis"), "vis"],
+            [this.T("uvIndex"), "uvIndex"],
         ]
         const cityId = city.cityId;
         const ReqNow = net.getWithApi("/now", { location: cityId });
@@ -197,15 +208,31 @@ class TempCache {
         return Promise.all([
             ReqNow, ReqH, ReqD
         ]).then(([now, hour, day]) => {
-            const r = <CityTemp>{
-                base: <BaseInfo>{},
-                detail: [],
-                days: <BaseInfo[]>[],
-                hours: <BaseInfo[]>[],
-                desc: '',
-                descF: '',
+            const r: CityTemp = {
                 ...city,
-                updateTime: new Date().getTime()
+                updateTime: new Date().getTime(),
+                desc: '--',
+                descF: '--',
+                base: {
+                    tempF: '--',
+                    text: '--',
+                    temp: '--',
+                    icon: '--',
+                    windDir: '--',
+                    windSpeed: '--',
+                    windScale: '--',
+                    tempMax: '--',
+                    tempMin: '--',
+                    tempMaxF: '--',
+                    tempMinF: '--',
+                    week: '--',
+                    hour: '--',
+                    iconDay: '--',
+                    bg: ''
+                },
+                detail: [],
+                days: [],
+                hours: [],
             };
             if (now && now.code === '200') {
                 r.base = now.now;
@@ -242,8 +269,8 @@ class TempCache {
             })
             const base = r.base;
             r.base.bg = this.getBg(r.base.icon);
-            r.desc = `今天：${base.text}，${base.windDir}${base.windSpeed}公里/小时。最高气温${base.tempMax || '--'}°，最低气温${base.tempMin || '--'}°`;
-            r.descF = `今天：${base.text}，${base.windDir}${base.windSpeed}公里/小时。最高气温${base.tempMaxF || '--'}°，最低气温${base.tempMinF || '--'}°`;
+            r.desc = `${this.T("week.Tody")}：${base.text}，${base.windDir}${base.windSpeed}${this.T("km/h")}。${this.T("tempMax")}${base.tempMax || '--'}°，${this.T("tempMin")}${base.tempMin || '--'}°`;
+            r.descF = `${this.T("week.Tody")}：${base.text}，${base.windDir}${base.windSpeed}${this.T("km/h")}。${this.T("tempMax")}${base.tempMaxF || '--'}°，${this.T("tempMin")}${base.tempMinF || '--'}°`;
             return r;
         })
     }

@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState, Ref, forwardRef, useImperativeHandle, useCallback } from "react";
+import { useTranslation } from 'react-i18next';
 import tempCache, { CityTemp } from "../../utils/tempCache";
 import { City } from "../../utils/cityManager";
 import './index.scss';
 
-const HFICONURL = "https://gitee.com/goldhan/WeatherIcon/raw/master/weather-icon-S2/64"; // /105.png
+const HFICONURL = import.meta.env.VITE_ICONURL; // /105.png
 
 interface Props {
     city: City,
@@ -19,6 +20,7 @@ const Index = (prop: _Props) => {
     const { city, unit, onLoaded, refInstance } = prop;
     const index = city.index;
     const isFloat = useRef(false);
+    const { t } = useTranslation();
     const [data, setData] = useState<CityTemp>({
         updateTime: 0,
         ...city,
@@ -182,7 +184,7 @@ const Index = (prop: _Props) => {
             <div className="float-detail">
                 <div className={`detail-tody index-${index}`}>
                     <div className="detail-tody-wrapped">
-                        <div className="tody-time">{`${todayData.week} 今天`}</div>
+                        <div className="tody-time">{`${todayData.week} ${t('week.Tody')}`}</div>
                         <div className="tody-temp">
                             {isF ? todayData.tempMaxF : todayData.tempMax}<span>{isF ? todayData.tempMinF : todayData.tempMin}</span>
                         </div>
@@ -193,7 +195,7 @@ const Index = (prop: _Props) => {
                         {hours.map((item, index) => {
                             const key = `detail-head-key-index-${index}`;
                             return <div key={key} className="hour">
-                                <div>{item.hour}时</div>
+                                <div>{item.hour}{t('H')}</div>
                                 <div>
                                     <img src={`${HFICONURL}/${item.icon}.png`} alt="icon" />
                                 </div>
@@ -240,6 +242,7 @@ const Index = (prop: _Props) => {
                                         <span>{item.name}:</span>
                                         <span>{item.value}</span>
                                     </div>
+                                    {index%2 !== 0 ? <div className="space"/> : null}
                                 </div>
                             })}
                         </div>

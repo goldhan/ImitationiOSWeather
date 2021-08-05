@@ -11,8 +11,11 @@
     "axios": "^0.21.1",
     "dayjs": "^1.10.6",
     "fastclick": "^1.0.6",
+    "i18next": "^20.3.5",
+    "i18next-browser-languagedetector": "^6.1.2",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
+    "react-i18next": "^11.11.4",
     "swiper": "^6.8.0"
   },
   "devDependencies": {

@@ -1,6 +1,8 @@
 import React, { useState, useImperativeHandle, Ref, forwardRef, useRef, useEffect } from 'react';
 import CityManager, { City } from "../../utils/cityManager";
+import { useTranslation } from 'react-i18next';
 import { NavigatorController } from "..";
+import configManager from '../../utils/configManager';
 import net from '../../utils/net';
 import Search from '../../res/search_white_24dp.svg';
 import Tools from '../../utils/tools';
@@ -22,13 +24,15 @@ const Index = (prop: _Props) => {
     const [citys, setCitys] = useState<City[]>([]);
     const [searchText, setSearchText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const { t } = useTranslation();
 
     const search_ = (value: string) => {
-        net.getWithApi('/city/lookup', { location: value }, true).then((resp) => {
+        const lang = configManager.getLang();
+        net.searchCity(value).then((resp) => {
             if (resp.code === '200' && resp.location && resp.location.length) {
                 const r: City[] = resp.location.map((item: any, index: number) => {
                     const { name, id, tz, utcOffset, adm1, adm2, country } = item;
-                    return { cityName: name, cityId: id, isNear: false, index, tz, utcOffset, adm1, adm2, country };
+                    return { cityName: name, cityId: id, isNear: false, index, tz, utcOffset, adm1, adm2, country, lang };
                 })
                 setCitys(r);
             } else {
@@ -73,13 +77,13 @@ const Index = (prop: _Props) => {
 
     let tip = '';
     if (searchText.length === 1) {
-        tip = '输入字符过少';
+        tip = t('tooFew');
     }
     if (searchText.length >= 2 && citys.length === 0 && !isLoading ) {
-        tip = '无记录';
+        tip = t('noResults');
     }
     if (isLoading) {
-        tip = '正在验证中';
+        tip = t('validating');
     }
 
     return <div className={`search-container ${className || ''}`}>
@@ -88,7 +92,7 @@ const Index = (prop: _Props) => {
         </div> */}
         <div className="content">
             <div className="head">
-                <span>输入城市、邮政编码或机场位置</span>
+                <span>{t('inputTip')}</span>
                 <div>
                     <div className="input">
                         <img alt="search" src={Search} />
@@ -98,7 +102,7 @@ const Index = (prop: _Props) => {
                     </div>
                     <div onClick={() => {
                         NavigatorController.Instance().pop(null, 'search-view');
-                    }}>取消</div>
+                    }}>{t('cancel')}</div>
                 </div>
             </div>
             <div className="result">

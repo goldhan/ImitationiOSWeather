@@ -1,0 +1,39 @@
+{
+    "week": {
+        "Tody": "Tody",
+        "Mon": "Monday",
+        "Tues": "Tuesday",
+        "Wed": "Wednesday",
+        "Thur": "Thursday",
+        "Fri": "Friday",
+        "Sat": "Saturday",
+        "Sun": "Sunday"
+    },
+    "del": "Delete",
+    "inputTip": "Enter city,zip code, or airport location",
+    "noResults": "No results found",
+    "validating": "Validating city...",
+    "tooFew": "Too few characters",
+    "H": "",
+    "km/h": "km/h",
+    "tempMax": "The high will be ",
+    "tempMin": "The low will be ",
+    "cancel": "Cancel",
+    "sunrise": "Sunrise",
+    "sunset": "Sunset",
+    "POP": "Chance of Rain",
+    "humidity": "Humidity",
+    "windSpeedDay": "Wind",
+    "apparentTemp": "Feels Like",
+    "precip": "Precipitation",
+    "pressure": "Pressure",
+    "vis": "Visibility",
+    "uvIndex": "UV Index"
+}
+
+
+
+
+
+
+

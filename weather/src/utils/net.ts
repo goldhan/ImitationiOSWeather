@@ -1,13 +1,14 @@
 import axios from 'axios';
 import gkLog from './gkLog';
+import configManager from './configManager';
 
-const isEnvPro = false;
-const HFAPIKEY = "eb3f2048fd264f6cbc6f49be9d472b9d";
-const HFAPIURLPRO = "https://api.qweather.com/v7/weather";
-const HFAPIURLDEV = "https://devapi.qweather.com/v7/weather";
-const HFAPIGEO = "https://geoapi.qweather.com/v2";
+const HFAPIKEY = import.meta.env.VITE_APIKEY;
+const HFAPIURL = import.meta.env.VITE_HFAPIURL;
+const HFAPIGEO = import.meta.env.VITE_HFAPIGEO;
 // const HFICONURL = "https://raw.githubusercontent.com/qwd/WeatherIcon/master/weather-icon-S2/64"; // /105.png
 let Instance: any;
+
+console.log(import.meta.env.APIKEY);
 class Net {
 
     static Instance = ():Net => {
@@ -18,7 +19,7 @@ class Net {
 
 
     getWithApi = (api:string, parm?: {[key:string]:any}, isGEOApi = false):Promise<any> => {
-        let url = isEnvPro ? HFAPIURLPRO : HFAPIURLDEV;
+        let url = HFAPIURL;
         if (isGEOApi) {
             url = HFAPIGEO;
         }
@@ -31,9 +32,14 @@ class Net {
                 }
             }
         }
-        
-        return this.get(`${url}${api}${parmStr}`);
-    } 
+    
+        const lanParm = `&lang=${configManager.getLang()}`;
+        return this.get(`${url}${api}${parmStr}${lanParm}`);
+    }
+
+    searchCity = (value:string):Promise<any> => {
+        return this.getWithApi('/city/lookup', { location: value }, true);
+    }
 
     get = (url:string):Promise<any> => {
         gkLog.log('↑',url);

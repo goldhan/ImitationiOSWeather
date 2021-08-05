@@ -1,0 +1,32 @@
+{
+    "week": {
+        "Tody": "今天",
+        "Mon": "星期一",
+        "Tues": "星期二",
+        "Wed": "星期三",
+        "Thur": "星期四",
+        "Fri": "星期五",
+        "Sat": "星期六",
+        "Sun": "星期日"
+    },
+    "del":"删除",
+    "inputTip": "输入城市、邮政编码或机场位置",
+    "noResults": "无记录",
+    "validating": "正在验证中",
+    "tooFew": "输入太少",
+    "km/h": "公里/小时",
+    "tempMax": "最高气温",
+    "tempMin": "最低气温",
+    "H": "时",
+    "cancel": "取消",
+    "sunrise": "日出",
+    "sunset": "日落",
+    "POP": "降水概率",
+    "humidity": "湿度",
+    "windSpeedDay": "风速",
+    "apparentTemp": "体感温度",
+    "precip": "降水量",
+    "pressure": "气压",
+    "vis": "能见度",
+    "uvIndex": "紫外线指数"
+}
