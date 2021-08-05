@@ -55,6 +55,7 @@ const Index = (prop: _Props) => {
             <div className="main">
                 <Swiper
                     className="swiper"
+                    cssMode
                     onSwiper={(s) => { if (s) setSwiper(s) }}
                     onSlideChange={(swiper) => setSelected(swiper.activeIndex)}
                 >

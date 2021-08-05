@@ -228,6 +228,11 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
+"@types/fastclick@^1.0.30":
+  version "1.0.30"
+  resolved "https://registry.yarnpkg.com/@types/fastclick/-/fastclick-1.0.30.tgz#17deac6b5ffb0b3709f5049faf24c9dc9b75e08a"
+  integrity sha512-koRHqVkngVb7FjAXWSCEelG9UONKL/NbcqbcSjt3Dw5lnEDXSDjviK7g6Zx9Tn87NFmPu3N0j7UHJUhyI27g+Q==
+
 "@types/prop-types@*":
   version "15.7.4"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.4.tgz#fcf7205c25dff795ee79af1e30da2c9790808f11"
@@ -411,6 +416,11 @@ estree-walker@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/estree-walker/-/estree-walker-2.0.2.tgz#52f010178c2a4c117a7757cfe942adb7d2da4cac"
   integrity sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==
+
+fastclick@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/fastclick/-/fastclick-1.0.6.tgz#161625b27b1a5806405936bda9a2c1926d06be6a"
+  integrity sha1-FhYlsnsaWAZAWTa9qaLBkm0Gvmo=
 
 fill-range@^7.0.1:
   version "7.0.1"

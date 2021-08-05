@@ -7,8 +7,10 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@types/fastclick": "^1.0.30",
     "axios": "^0.21.1",
     "dayjs": "^1.10.6",
+    "fastclick": "^1.0.6",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "swiper": "^6.8.0"
