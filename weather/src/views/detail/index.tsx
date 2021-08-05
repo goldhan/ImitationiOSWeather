@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Ref, forwardRef, useImperativeHandle, useCallback } from "react";
 import tempCache, { CityTemp } from "../../utils/tempCache";
 import { City } from "../../utils/cityManager";
 import './index.scss';
@@ -11,8 +11,12 @@ interface Props {
     onLoaded?: (CityTemp: CityTemp) => void
 }
 
-const Index = (prop: Props) => {
-    const { city, unit, onLoaded } = prop;
+interface _Props extends Props {
+    refInstance?: Ref<any>
+}
+
+const Index = (prop: _Props) => {
+    const { city, unit, onLoaded, refInstance } = prop;
     const index = city.index;
     const isFloat = useRef(false);
     const [data, setData] = useState<CityTemp>({
@@ -44,8 +48,11 @@ const Index = (prop: Props) => {
     const domTemp = useRef<{ [key: string]: HTMLElement }>({});
     const lastScrollTop = useRef(0);
     const lastInnerHeight = useRef(window.innerHeight);
-    useEffect(() => {
+    useImperativeHandle(refInstance, () => ({ refresh }));
+    const refresh = useCallback(() => {
         getData(city);
+    }, [city]);
+    useEffect(() => {
         window.onresize = () => {
             if (lastInnerHeight.current !== window.innerHeight && lastInnerHeight.current <= 750) {
                 window.location.reload();
@@ -243,4 +250,4 @@ const Index = (prop: Props) => {
     </div>
 }
 
-export default Index;
+export default forwardRef((props: Props, ref: Ref<any>) => <Index {...props} refInstance={ref} />);

@@ -30,11 +30,12 @@ const Index = (prop: _Props) => {
     const [bg, setBg] = useState('');
     const timer = useRef<number>();
     useEffect(() => {
-        refresh();
+        // refresh();
     }, [])
 
     useNavigatorCycle((act, from, to, parm) => {
         if (to === 'list-view') {
+            refresh();
             startTimer();
         }
         if (from === 'list-view') {
@@ -44,11 +45,11 @@ const Index = (prop: _Props) => {
     }, 'list-view');
     
     useEffect(() => {
-        getTime(citys);
-        startTimer();
         if (citys.length) {
             const index =  Math.floor(Math.random() * citys.length);	
             setBg(citys[index].base.bg);
+            getTime(citys);
+            startTimer();
         }
     }, [citys])
 

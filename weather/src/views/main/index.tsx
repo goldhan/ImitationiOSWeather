@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useImperativeHandle, Ref, forwardRef } from "react";
+import React, { useEffect, useState, useImperativeHandle, Ref, forwardRef, useRef } from "react";
 import Detail from '../detail';
 import CityManager, { City } from "../../utils/cityManager";
 import tempCache from "../../utils/tempCache";
@@ -16,6 +16,9 @@ interface Props {
 interface _Props extends Props {
     refInstance?: Ref<any>
 }
+interface RefInterface {
+    refresh: () => void
+}
 
 const Index = (prop: _Props) => {
     const { goto, className, refInstance } = prop;
@@ -25,9 +28,10 @@ const Index = (prop: _Props) => {
     const [isGetCityFail, setIsGetCityFail] = useState(false);
     const [unit, setUnit] = useState<'C'|'F'>(tempCache.getTempUnit());
     const [bgs, setBgs] = useState<{[key:string]:string}>({});
+    const viewRefs = useRef<{ [key: string]: RefInterface}>({});
     useEffect(() => {
-        //    refresh();
-    }, []);
+        refreshSubView(selected);
+    }, [citys]);
     const refresh = () => {
         CityManager.getCitys().then((citys) => {
             setCitys(citys);
@@ -37,6 +41,14 @@ const Index = (prop: _Props) => {
             NavigatorController.Instance().push('search-view');
         });
         setUnit(tempCache.getTempUnit());
+    }
+    const refreshSubView = (index:number) => {
+        if (citys.length) {
+            const ref = viewRefs.current[citys[index].cityId]
+            if (ref) {
+                ref.refresh();
+            }
+        }
     }
     const slideTo = (index: number) => {
         if (swiper) {
@@ -57,12 +69,15 @@ const Index = (prop: _Props) => {
                     className="swiper"
                     cssMode
                     onSwiper={(s) => { if (s) setSwiper(s) }}
-                    onSlideChange={(swiper) => setSelected(swiper.activeIndex)}
+                    onSlideChange={(swiper) => {
+                        setSelected(swiper.activeIndex);
+                        refreshSubView(swiper.activeIndex);
+                    }}
                 >
                     {citys.map((item, index) => {
                         const key = `detail-key-${index}`;
                         // const { cityId, cityName, isNear } = item;
-                        return <SwiperSlide key={key}><Detail city={item} unit={unit} onLoaded={(cityTemp) => {
+                        return <SwiperSlide key={key}><Detail ref={(r: RefInterface) => {viewRefs.current[item.cityId] = r}} city={item} unit={unit} onLoaded={(cityTemp) => {
                             setBgs((old) => {
                                 const n = {...old};
                                 n[cityTemp.cityId] = cityTemp.base.bg;
@@ -71,7 +86,6 @@ const Index = (prop: _Props) => {
                                }
                                 return n;
                             })
-
                         }}/></SwiperSlide>
                     })}
                 </Swiper>
@@ -100,6 +114,7 @@ const Index = (prop: _Props) => {
                         <div onClick={() => {
                             if (swiper) {
                                 swiper.slideNext();
+                                
                             }
                         }} />
                     </div>
