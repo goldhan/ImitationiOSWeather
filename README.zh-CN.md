@@ -12,16 +12,14 @@
 
 ## Screenshots
 
-<div style="display:flex;flex-wrap:wrap">
-    <img src="./preview/01.png" width = "200" alt="" align=left />
-    <img src="./preview/02.png" width = "200" alt="" align=left />
-    <img src="./preview/03.png" width = "200" alt="" align=left />
-    <img src="./preview/04.png" width = "200" alt="" align=left />
-    <img src="./preview/05.png" width = "200" alt="" align=left />
-    <img src="./preview/06.png" width = "200" alt="" align=left />
+<div>
+    <img src="./preview/01.png" height= "300em" alt="" />
+    <img src="./preview/02.png" height= "300em" alt="" />
+    <img src="./preview/03.png" height= "300em" alt="" />
+    <img src="./preview/04.png" height= "300em" alt="" />
+    <img src="./preview/05.png" height= "300em" alt="" />
+    <img src="./preview/06.png" height= "300em" alt="" />
 </div>
-
-</br>
 
 ## Start
 
