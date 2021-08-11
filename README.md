@@ -6,6 +6,7 @@ __Warning__: Google Translate
 ![lic](https://img.shields.io/github/license/goldhan/ImitationiOSWeather)
 [![中文](https://img.shields.io/badge/Lang-Chinese-red.svg
 )](./README.zh-CN.md)
+[![DEMO](https://img.shields.io/badge/Demo-green.svg)](https://goldhan.github.io/weather.github.io/index.html)
 
 ## Technology
 
@@ -49,7 +50,11 @@ __Warning__: Google Translate
 - VITE_HFAPIGEO - qweather, about search API
 - VITE_ICONURL - weather status icon url
   - China <https://gitee.com/goldhan/WeatherIcon/raw/masterweather-icon-S2/64>
-  - Abroad <https://github.com/qwd/WeatherIcon/raw/masterweather-icon-S2/64>
+  - Abroad <https://raw.githubusercontent.com/qwd/WeatherIcon/master/weather-icon-S2/64>
+
+### vite.config.ts
+
+[vite config](https://vitejs.dev/config/)
 
 ## TODO
 
@@ -66,5 +71,7 @@ __Warning__: Google Translate
 
 ### 要不请我喝杯奶茶胖死我 😜
 
+<div>
 <img src="./preview/wechat-m.jpeg" width = "300" alt=""/>
 <img src="./preview/ali.jpg" width = "300" alt=""/>
+</div>

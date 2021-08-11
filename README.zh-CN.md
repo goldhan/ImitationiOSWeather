@@ -2,6 +2,9 @@
 
 ![lang](https://img.shields.io/github/languages/top/goldhan/ImitationiOSWeather)
 ![lic](https://img.shields.io/github/license/goldhan/ImitationiOSWeather)
+[![DEMO](https://img.shields.io/badge/Demo-green.svg)](https://goldhan.github.io/weather.github.io/index.html)
+
+> Demo 如有加载不出来，请科学学习
 
 ## 技术栈
 
@@ -41,8 +44,11 @@
 - VITE_HFAPIGEO - 和风天气，关于城市搜索 API
 - VITE_ICONURL - 天气状态图表拼接地址
   - China 大陆请使用 <https://gitee.com/goldhan/WeatherIcon/raw/masterweather-icon-S2/64>
-  - 大陆以外可以使用 <https://github.com/qwd/WeatherIcon/raw/masterweather-icon-S2/64>
+  - 大陆以外可以使用 <https://raw.githubusercontent.com/qwd/WeatherIcon/master/weather-icon-S2/64>
 
+### vite.config.ts
+
+[vite config](https://cn.vitejs.dev/config/)
 ## TODO
 
 - [x] 定位
@@ -58,5 +64,8 @@
 
 ### 要不请我喝杯奶茶胖死我 😜
 
-<img src="./preview/wechat-m.jpeg" width = "300" alt=""  />
-<img src="./preview/ali.jpg" width = "300" alt="" />
+<div>
+<img src="./preview/wechat-m.jpeg" width = "300" alt=""/>
+<img src="./preview/ali.jpg" width = "300" alt=""/>
+</div>
+
