@@ -16,14 +16,14 @@ __Warning__: Google Translate
 
 ## Screenshots
 
-<div align=center>
+
     <img src="./preview/01.png" width = "200" alt="" align=left />
     <img src="./preview/02.png" width = "200" alt="" align=left />
     <img src="./preview/03.png" width = "200" alt="" align=left />
     <img src="./preview/04.png" width = "200" alt="" align=left />
     <img src="./preview/05.png" width = "200" alt="" align=left />
     <img src="./preview/06.png" width = "200" alt="" align=left />
-</div>
+
 
 ## 
 
