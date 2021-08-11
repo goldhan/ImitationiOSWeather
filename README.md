@@ -16,7 +16,7 @@ __Warning__: Google Translate
 
 ## Screenshots
 
-<div align=center style="display:flex;flex-wrap:wrap;width:100%">
+<div align=center>
     <img src="./preview/01.png" width = "200" alt="" align=left />
     <img src="./preview/02.png" width = "200" alt="" align=left />
     <img src="./preview/03.png" width = "200" alt="" align=left />
