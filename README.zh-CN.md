@@ -1,17 +1,13 @@
-# iOS Weather
-
-__Warning__: Google Translate
+# 高仿 iOS 天气
 
 ![lang](https://img.shields.io/github/languages/top/goldhan/ImitationiOSWeather)
 ![lic](https://img.shields.io/github/license/goldhan/ImitationiOSWeather)
-[![中文](https://img.shields.io/badge/Lang-Chinese-red.svg
-)](./README.zh-CN.md)
 
-## Technology
+## 技术栈
 
-- [React](https://reactjs.org/)
+- [React](https://react.docschina.org/)
 - TypeScript
-- [Vite](https://vitejs.dev/)
+- [Vite](https://cn.vitejs.dev/)
 - scss
 
 ## Screenshots
@@ -35,23 +31,23 @@ __Warning__: Google Translate
 
 ### .env.xxx
 
-- VITE_APIKEY - [qweather](https://dev.qweather.com/en/) api key
-- VITE_HFAPIURL - qweather, about weather API
-- VITE_HFAPIGEO - qweather, about search API
-- VITE_ICONURL - weather status icon url
-  - China <https://gitee.com/goldhan/WeatherIcon/raw/masterweather-icon-S2/64>
-  - Abroad <https://github.com/qwd/WeatherIcon/raw/masterweather-icon-S2/64>
+- VITE_APIKEY - [和风天气](https://dev.qweather.com/) api key
+- VITE_HFAPIURL - 和风天气，天气 API
+- VITE_HFAPIGEO - 和风天气，关于城市搜索 API
+- VITE_ICONURL - 天气状态图表拼接地址
+  - China 大陆请使用 <https://gitee.com/goldhan/WeatherIcon/raw/masterweather-icon-S2/64>
+  - 大陆以外可以使用 <https://github.com/qwd/WeatherIcon/raw/masterweather-icon-S2/64>
 
 ## TODO
 
-- [x] Positioning
-- [x] Search
-- [x] Drag Sort
-- [x] Add / Delete City
-- [x] world time
-- [x] i18
+- [x] 定位
+- [x] 搜索
+- [x] 拖动排序
+- [x] 添加删除城市
+- [x] 列表页面世界时间
+- [x] 国际化
 
-## Hope to help you
+## 希望对你有所帮助
 
 如代码有迷糊行为请吐槽，谢谢
 
