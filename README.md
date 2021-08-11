@@ -25,6 +25,8 @@ __Warning__: Google Translate
     <img src="./preview/06.png" width = "200" alt="" align=left />
 </div>
 
+</br>
+
 ## Start
 
 - `cd weather`
