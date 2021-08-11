@@ -109,6 +109,11 @@ class CityManager {
         });
     }
 
+    updateCitysStorage = (citys: City[]) => {
+        this.citys = citys.map((item,index) => ({...item, index}));
+        storage.set('citys', { data: this.citys });
+    }
+
     updateCitys = (citys: City[]):Promise<{[key:string]:City}> => {
         const lang = configManager.getLang();
         const citys_ = citys.filter((item) => item.lang !== lang);
