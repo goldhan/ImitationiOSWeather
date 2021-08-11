@@ -27,6 +27,11 @@
 - `yarn`
 - `yarn dev`
 
+### PRO
+
+- `cd weather`
+- `yarn`
+- `yarn build`
 ## Tip
 
 ### .env.xxx
@@ -53,5 +58,5 @@
 
 ### 要不请我喝杯奶茶胖死我 😜
 
-<img src="./preview/wechat-m.jpeg" width = "300" alt="" align=left />
-<img src="./preview/ali.jpg" width = "300" alt="" align=left />
+<img src="./preview/wechat-m.jpeg" width = "300" alt=""  />
+<img src="./preview/ali.jpg" width = "300" alt="" />
